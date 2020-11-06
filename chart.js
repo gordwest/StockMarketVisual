@@ -1,5 +1,5 @@
+// Load CSV
 window.onload = function(){
-    // setup("alphabet.csv");
     setup("DataTest.csv");
 };
 
