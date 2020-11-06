@@ -1,6 +1,6 @@
 // Load CSV
 window.onload = function(){
-    setup("DataTest.csv");
+    setup("DataTest2.csv");
 };
 
 const MARGIN = {
@@ -28,16 +28,14 @@ setup = function (dataPath) {
             return new Date(x.Date) - new Date(y.Date);
         });
         //create a barchart object
-        barChart = new barChart(d, SVG);
+        barChart = new barChart(d, SVG);  
     });
-
 };
 
 barChart = function (data, svg) {
-
-    //TODO: Scales
+    // Scales
     xScale = d3.scaleBand()
-        .domain(d3.range(data.length/3))
+        .domain(d3.range(data.length))
         .range([MARGIN.LEFT, width - MARGIN.RIGHT])
         .padding(0.1);
 
@@ -45,11 +43,11 @@ barChart = function (data, svg) {
         .domain([0, 50])
         .range([height - MARGIN.BOTTOM, MARGIN.TOP]);
 
-    //TODO: create an svg group for the bar chart
+    // create an svg group for the bar chart
     chart = svg.append("g")
         .attr("class", "bar chart")
 
-    //TODO: Create the bars in the bar chart
+    // Create the bars in the bar chart
     bars = chart.selectAll("rect")
         .data(data)
         .enter()
@@ -62,21 +60,15 @@ barChart = function (data, svg) {
         .attr("width", xScale.bandwidth) 
         .attr("height", d => yScale(0) - yScale(d.Price)) 
         .attr("fill", "steelblue")
-        .on("mouseover", function (event, d){
-            this.setAttribute("fill", "orange")
-        })
-        .on("mouseleave", function (event, d){
-            this.setAttribute("fill", "steelblue")
-        })
-
-    //TODO: create Y axis using yScale
+        
+    // create Y axis using yScale
     var yAxis = d3.axisLeft()
         .scale(yScale);
     chart.append("g")
         .attr("transform", "translate(" + MARGIN.LEFT + "," + 0 + ")")
         .call(yAxis)
         
-    //TODO: create X axis using xScale    
+    // create X axis using xScale    
     var xAxis = d3.axisBottom()
         .tickFormat((d,i) => data[i].Date)
         .scale(xScale);
