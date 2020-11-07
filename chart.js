@@ -46,7 +46,7 @@ barChart = function (data, svg) {
 
     //creating the scales for our bar chart
     xScale = d3.scaleBand() //a band scale automatically determines sizes of objects based on amount of data and draw space
-        .domain(d3.range(data.length/3)) //amount of data
+        .domain(d3.range(data.length)) //amount of data
         .range([MARGIN.LEFT, width - MARGIN.RIGHT]) //draw space
         .padding(0.1) //space between each data mark
 
@@ -71,24 +71,22 @@ barChart = function (data, svg) {
             .selectAll('rect')  //we are going to bind all the rectangle
             .data(data) //to this data
 
-
         bars
             .enter() // so go into the data
             .append('rect') //and create a rectangle for each row of data from the csv, with the following attributes detailed below
-            .attr("class", d => d.Ticker) //class = from a particular row in data, return letter from that row
+            // .attr("class", d => d.Ticker) //class = from a particular row in data, return letter from that row
             .attr("x", (d,i) => xScale(i) ) // x = for a particular row of data, return the row's index * (barWidth+spacing)
             .attr("y", d => yScale(d.Price)) //y = the where ever our scale thinks the top most of the bar should be
-            //(x,y) denotes the top left corner of the rectangle
             .attr("width", xScale.bandwidth) //d3.scaleBand provides its calculated fields for you.
-            //this technically is not a number, so you cannot do calculations with it
             .attr("height", d => yScale(0) - yScale(d.Price)) //the height of the rectangle is the difference between the top most part (frequency scaled)  and it's lowest part (0 scaled)
             .attr("fill", "steelblue") //set the color of the rectangle to blue
-            .attr("class", d=> d.isCool);
 
         // add prices above bars
         prices = chart
             .selectAll("text")
             .data(data)
+            
+        prices
             .enter()
             .append("text")
             .attr("x", (d,i) => xScale(i) + 5)
@@ -98,7 +96,6 @@ barChart = function (data, svg) {
             .attr("font-size", "14px")
             .attr("fill", "black");
             
-
         //create the render specifications for y axis
         var yAxis = d3.axisLeft()
             .scale(yScale);
@@ -121,7 +118,6 @@ barChart = function (data, svg) {
     };
 
     this.singleDay = function () {
-
         //creating a subset of our data that we want to keep (the cool letters)
         keepData = [];
         kIndex = 0;
@@ -130,7 +126,7 @@ barChart = function (data, svg) {
             if(data[i].Date === '9/28/2015')
                 keepData[kIndex++] = data[i];
         }
-
+        console.log(keepData)
         //Update our scale for our subset
         xScale
             .domain(d3.range(keepData.length));
@@ -149,15 +145,11 @@ barChart = function (data, svg) {
             .select(".barChart")
             .selectAll('rect')
             .data(keepData) //rebind our new data
-            // since we have 4 rows of data left, this just binds the data to the first 4 rects
-
-        //remove what we don't want
+            
         bars
             .exit() //select dom elements that have no data correlated to it
             .remove() // remove those objects
 
-        // update bar width and x-position, also add some nice animation
-        // update our remaining rects to correctly represent the data
         bars
             .transition()
             .duration(500)
@@ -166,14 +158,33 @@ barChart = function (data, svg) {
             .attr("y", d => yScale(d.Price))
             .attr("x", (d,i) => xScale(i))
             .attr("fill", "lightblue");
+        
+        // add prices above bars
+        prices = svg
+            .select(".barChart")
+            .selectAll("text")
+            .data(keepData)
+        
+        prices
+            .exit()
+            .remove()
+            
+        prices
+            .transition()
+            .duration(500)
+            .attr("x", (d,i) => xScale(i) + 600)
+            .attr("y", d => yScale(d.Price) - 20)
+            .text(d => "$" + d.Price)
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "30px")
+            .attr("fill", "black");
 
     };
 
-    this.allLetters = function () {
+    this.allDays = function () {
 
-        // return our scale back to the uncool state
         xScale = d3.scaleBand() //a band scale automatically determines sizes of objects based on amount of data and draw space
-        .domain(d3.range(data.length/3)) //amount of data
+        .domain(d3.range(data.length)) //amount of data
         .range([MARGIN.LEFT, width - MARGIN.RIGHT]) //draw space
         .padding(0.1) //space between each data mark
 
@@ -191,20 +202,35 @@ barChart = function (data, svg) {
             .selectAll('rect')
             .data(data);
         
-
-        // Make a nice animation and update the rect attributes as necessary
         bars
             .enter()
             .append('rect')
             .merge(bars)
             .transition()
             .duration(500)
-            .attr("class", d=> d.isCool )
             .attr("x", (d,i) => xScale(i) )
             .attr("y", d => yScale(d.Price))
             .attr("width", xScale.bandwidth)
             .attr("height", d => yScale(0) - yScale(d.Price))
             .attr("fill", "steelblue");
+
+        prices = svg
+            .select(".barChart")
+            .selectAll("text")
+            .data(data);
+            
+        prices
+            .enter()
+            .append("text")
+            .merge(prices)
+            .transition()
+            .duration(500)
+            .attr("x", (d,i) => xScale(i) + 5)
+            .attr("y", d => yScale(d.Price) - 20)
+            .text(d => "$" + d.Price)
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "14px")
+            .attr("fill", "black");
     }
 };
 
@@ -218,7 +244,7 @@ function switchFilter(){
         document.getElementById("switchFilter").innerHTML = "Single Day: ON";
     }
     else{
-        _barChart.allLetters();
+        _barChart.allDays();
         document.getElementById("switchFilter").innerHTML = "Single Day: OFF";
     }
 
