@@ -35,7 +35,6 @@ barChart = function (data, svg) {
         if(data[i].Date === dateRange[dateIdx])
             filteredData[kIndex++] = data[i];
     }
-    console.log(filteredData)
 
     // creating scales for barchart
     xScale = d3.scaleBand()
@@ -90,6 +89,7 @@ barChart = function (data, svg) {
 
         //draw the y axis on our chart
         chart.append("g")
+            .style("font", "20px times")
             .attr("transform", "translate("+ MARGIN.LEFT + ","+ 0 +")")
             .call(yAxis);
 
@@ -98,32 +98,31 @@ barChart = function (data, svg) {
             .tickFormat((d,i) => filteredData[i].Ticker)
             .scale(xScale);
 
-        //draw the y axis on our chart
+        //draw the x axis on our chart
         chart.append("g")
+            .style("font", "20px times")
             .attr("transform", "translate("+ 0 + ","+ (height-MARGIN.BOTTOM) +")")
             .attr("class", "xAxis")
             .call(xAxis);
     };
 
-
-
+    // update chart with new data
     this.updateChart = function(){
-
+        // update label
         document.getElementById("currentDate").innerHTML = dateRange[dateIdx];
 
-        filteredData2 = [];
+        nextDateData = [];
         kIndex = 0;
         for (i = 0; i < data.length; i++){
             if(data[i].Date === dateRange[dateIdx])
-            filteredData2[kIndex++] = data[i];
+            nextDateData[kIndex++] = data[i];
         }
-        console.log(filteredData2)
 
         xScale
-            .domain(d3.range(filteredData2.length));
+            .domain(d3.range(nextDateData.length));
         
             var newAxis = d3.axisBottom()
-                .tickFormat((d,i) => filteredData2[i].Ticker)
+                .tickFormat((d,i) => nextDateData[i].Ticker)
                 .scale(xScale)
 
             svg.select(".xAxis")
@@ -134,7 +133,7 @@ barChart = function (data, svg) {
         bars = svg
             .select(".barChart")
             .selectAll('rect')
-            .data(filteredData2)
+            .data(nextDateData)
 
         bars
             .exit()
@@ -152,7 +151,7 @@ barChart = function (data, svg) {
         prices = svg
             .select(".barChart")
             .selectAll('text')
-            .data(filteredData2)
+            .data(nextDateData)
 
         prices
             .exit()
@@ -169,7 +168,7 @@ barChart = function (data, svg) {
             .attr("fill", "black");
 
         xScale = d3.scaleBand()
-            .domain(d3.range(filteredData2.length)) 
+            .domain(d3.range(nextDateData.length)) 
             .range([MARGIN.LEFT, width - MARGIN.RIGHT])
             .padding(0.1) 
     
@@ -184,16 +183,18 @@ barChart = function (data, svg) {
 
         //draw the y axis on our chart
         chart.append("g")
+            .style("font", "20px times")
             .attr("transform", "translate("+ MARGIN.LEFT + ","+ 0 +")")
             .call(yAxis);
 
         //create the render specifications for x axis
         var xAxis = d3.axisBottom()
-            .tickFormat((d,i) => filteredData[i].Ticker)
+            .tickFormat((d,i) => nextDateData[i].Ticker)
             .scale(xScale);
 
         //draw the y axis on our chart
         chart.append("g")
+            .style("font", "20px times")
             .attr("transform", "translate("+ 0 + ","+ (height-MARGIN.BOTTOM) +")")
             .attr("class", "xAxis")
             .call(xAxis);
