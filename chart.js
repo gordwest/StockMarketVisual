@@ -1,5 +1,5 @@
 window.onload = function(){
-    setup("DataTest.csv");
+    setup("DataTest2.csv");
 };
 
 const MARGIN = {
@@ -11,89 +11,77 @@ const MARGIN = {
 
 //dimension of our workspace
 const width  = 1920, height = 1080;
-
 var _barChart; //define a global reference for barchart
 
-/**
- * This function loads the data and calls other necessary functions to create our visualization
- * @param dataPath - the path to your data file from the project's root folder
- */
 setup = function (dataPath) {
-    //defining an easy reference for out SVG Container
     var SVG = d3.select("#SVG_CONTAINER");
-
-    //Loading in our Data with D3
     d3.csv(dataPath).then(function (d) {
-
         d.sort(function(x, y){
-            return new Date(x.Date) - new Date(y.Date);
+            return d3.descending(parseFloat(x.Price), parseFloat(y.Price));
         });
-
-        //create a barchart object
         _barChart = new barChart(d, SVG);
         _barChart.draw();
 
     });
-
 };
 
-/**
- * We define our barChart object here
- * @Param data - the data to be use for this bar chart
- * @Param svg - the svg where the bar chart will be drawn
- */
+var dateIdx = 0
+dateRange = ["9/21/2015","9/21/2016","9/21/2017","9/21/2018","9/20/2019","9/18/2020"]
+
 barChart = function (data, svg) {
+    filteredData = [];
+    kIndex = 0;
+    for (i = 0; i < data.length; i++){
+        if(data[i].Date === dateRange[dateIdx])
+            filteredData[kIndex++] = data[i];
+    }
+    console.log(filteredData)
 
-    //creating the scales for our bar chart
-    xScale = d3.scaleBand() //a band scale automatically determines sizes of objects based on amount of data and draw space
-        .domain(d3.range(data.length)) //amount of data
-        .range([MARGIN.LEFT, width - MARGIN.RIGHT]) //draw space
-        .padding(0.1) //space between each data mark
+    // creating scales for barchart
+    xScale = d3.scaleBand()
+        .domain(d3.range(filteredData.length)) 
+        .range([MARGIN.LEFT, width - MARGIN.RIGHT])
+        .padding(0.1) 
 
-    //the frequency of occurrence
-    yScale = d3.scaleLinear()   //a linear scale is simply a continuous linear growth axis
-        .domain([0, 50])      //the "input" that you want to map, essentially the extent of your numeric data
-        .range([height-MARGIN.BOTTOM, MARGIN.TOP]);   //the "output" you map it to, basically the pixels on your screen
-            //the range is reversed because pixels height are counted downward,
-            // and we want to map our largest value to the highest point, which is 0
+    yScale = d3.scaleLinear()
+        .domain([0, 100])    
+        .range([height-MARGIN.BOTTOM, MARGIN.TOP]); 
 
-
-    //draws our barchart
+    //draws the initial barchart
     this.draw = function(){
+        // update date label
+        document.getElementById("currentDate").innerHTML = dateRange[dateIdx];
 
-        //creating a group that will confine our bar chart. This is for organization purposes.
-        //the actual creation is from svg.append onward
-        //the first part assigns the result of that call to "chart"
         chart = svg.append('g')
             .attr("class", "barChart");
 
         bars = chart
-            .selectAll('rect')  //we are going to bind all the rectangle
-            .data(data) //to this data
+            .selectAll('rect')
+            .data(filteredData)
 
         bars
-            .enter() // so go into the data
-            .append('rect') //and create a rectangle for each row of data from the csv, with the following attributes detailed below
-            // .attr("class", d => d.Ticker) //class = from a particular row in data, return letter from that row
-            .attr("x", (d,i) => xScale(i) ) // x = for a particular row of data, return the row's index * (barWidth+spacing)
-            .attr("y", d => yScale(d.Price)) //y = the where ever our scale thinks the top most of the bar should be
-            .attr("width", xScale.bandwidth) //d3.scaleBand provides its calculated fields for you.
-            .attr("height", d => yScale(0) - yScale(d.Price)) //the height of the rectangle is the difference between the top most part (frequency scaled)  and it's lowest part (0 scaled)
-            .attr("fill", "steelblue") //set the color of the rectangle to blue
+            .enter()
+            .append('rect') 
+            .attr("class", d => d.Ticker) 
+            .attr("x", (d,i) => xScale(i) )
+            .attr("y", d => yScale(d.Price)) 
+            .attr("width", xScale.bandwidth)
+            .attr("height", d => yScale(0) - yScale(d.Price))
+            .attr("fill", "steelblue")
 
         // add prices above bars
         prices = chart
             .selectAll("text")
-            .data(data)
+            .data(filteredData)
             
         prices
             .enter()
             .append("text")
-            .attr("x", (d,i) => xScale(i) + 5)
+            .attr("x", (d,i) => xScale(i) + 45)
             .attr("y", d => yScale(d.Price) - 20)
             .text(d => "$" + d.Price)
             .attr("font-family", "sans-serif")
-            .attr("font-size", "14px")
+            .attr("font-size", "20px")
             .attr("fill", "black");
             
         //create the render specifications for y axis
@@ -107,7 +95,7 @@ barChart = function (data, svg) {
 
         //create the render specifications for x axis
         var xAxis = d3.axisBottom()
-            .tickFormat((d,i) => data[i].Date)
+            .tickFormat((d,i) => filteredData[i].Ticker)
             .scale(xScale);
 
         //draw the y axis on our chart
@@ -117,22 +105,25 @@ barChart = function (data, svg) {
             .call(xAxis);
     };
 
-    this.singleDay = function () {
-        //creating a subset of our data that we want to keep (the cool letters)
-        keepData = [];
+
+
+    this.updateChart = function(){
+
+        document.getElementById("currentDate").innerHTML = dateRange[dateIdx];
+
+        filteredData2 = [];
         kIndex = 0;
         for (i = 0; i < data.length; i++){
-
-            if(data[i].Date === '9/28/2015')
-                keepData[kIndex++] = data[i];
+            if(data[i].Date === dateRange[dateIdx])
+            filteredData2[kIndex++] = data[i];
         }
-        console.log(keepData)
-        //Update our scale for our subset
+        console.log(filteredData2)
+
         xScale
-            .domain(d3.range(keepData.length));
+            .domain(d3.range(filteredData2.length));
         
             var newAxis = d3.axisBottom()
-                .tickFormat((d,i) => keepData[i].Date)
+                .tickFormat((d,i) => filteredData2[i].Ticker)
                 .scale(xScale)
 
             svg.select(".xAxis")
@@ -140,15 +131,14 @@ barChart = function (data, svg) {
                 .duration(500)
                 .call(newAxis);
 
-        //define our selection
         bars = svg
             .select(".barChart")
             .selectAll('rect')
-            .data(keepData) //rebind our new data
-            
+            .data(filteredData2)
+
         bars
-            .exit() //select dom elements that have no data correlated to it
-            .remove() // remove those objects
+            .exit()
+            .remove()
 
         bars
             .transition()
@@ -157,96 +147,78 @@ barChart = function (data, svg) {
             .attr("width", xScale.bandwidth)
             .attr("y", d => yScale(d.Price))
             .attr("x", (d,i) => xScale(i))
-            .attr("fill", "lightblue");
-        
-        // add prices above bars
-        prices = svg
-            .select(".barChart")
-            .selectAll("text")
-            .data(keepData)
-        
-        prices
-            .exit()
-            .remove()
-            
-        prices
-            .transition()
-            .duration(500)
-            .attr("x", (d,i) => xScale(i) + 600)
-            .attr("y", d => yScale(d.Price) - 20)
-            .text(d => "$" + d.Price)
-            .attr("font-family", "sans-serif")
-            .attr("font-size", "30px")
-            .attr("fill", "black");
-
-    };
-
-    this.allDays = function () {
-
-        xScale = d3.scaleBand() //a band scale automatically determines sizes of objects based on amount of data and draw space
-        .domain(d3.range(data.length)) //amount of data
-        .range([MARGIN.LEFT, width - MARGIN.RIGHT]) //draw space
-        .padding(0.1) //space between each data mark
-
-        var xAxis = d3.axisBottom()
-            .tickFormat((d,i) => data[i].Date)
-            .scale(xScale);
-
-        svg.select(".xAxis")
-            .transition()
-            .duration(500)
-            .call(xAxis);
-
-        bars = svg
-            .select(".barChart")
-            .selectAll('rect')
-            .data(data);
-        
-        bars
-            .enter()
-            .append('rect')
-            .merge(bars)
-            .transition()
-            .duration(500)
-            .attr("x", (d,i) => xScale(i) )
-            .attr("y", d => yScale(d.Price))
-            .attr("width", xScale.bandwidth)
-            .attr("height", d => yScale(0) - yScale(d.Price))
             .attr("fill", "steelblue");
 
         prices = svg
             .select(".barChart")
-            .selectAll("text")
-            .data(data);
-            
+            .selectAll('text')
+            .data(filteredData2)
+
         prices
-            .enter()
-            .append("text")
-            .merge(prices)
+            .exit()
+            .remove()
+
+        prices
             .transition()
             .duration(500)
-            .attr("x", (d,i) => xScale(i) + 5)
+            .attr("x", (d,i) => xScale(i) + 45)
             .attr("y", d => yScale(d.Price) - 20)
             .text(d => "$" + d.Price)
             .attr("font-family", "sans-serif")
-            .attr("font-size", "14px")
+            .attr("font-size", "20px")
             .attr("fill", "black");
-    }
+
+        xScale = d3.scaleBand()
+            .domain(d3.range(filteredData2.length)) 
+            .range([MARGIN.LEFT, width - MARGIN.RIGHT])
+            .padding(0.1) 
+    
+        //the frequency of occurrence
+        yScale = d3.scaleLinear()
+            .domain([0, 100])    
+            .range([height-MARGIN.BOTTOM, MARGIN.TOP]);
+
+        //create the render specifications for y axis
+        var yAxis = d3.axisLeft()
+            .scale(yScale);
+
+        //draw the y axis on our chart
+        chart.append("g")
+            .attr("transform", "translate("+ MARGIN.LEFT + ","+ 0 +")")
+            .call(yAxis);
+
+        //create the render specifications for x axis
+        var xAxis = d3.axisBottom()
+            .tickFormat((d,i) => filteredData[i].Ticker)
+            .scale(xScale);
+
+        //draw the y axis on our chart
+        chart.append("g")
+            .attr("transform", "translate("+ 0 + ","+ (height-MARGIN.BOTTOM) +")")
+            .attr("class", "xAxis")
+            .call(xAxis);
+
+        // update data after 1 sec
+        setTimeout(function() {
+            incrementDate();
+        }, 1000);
+        
+    };
+
 };
 
-//this function handles the onclick event for our button in index.html
-function switchFilter(){
+function incrementDate() {
+    //your code to be executed after 1 second
+    if (dateIdx < 5)
+        dateIdx += 1;
+    else
+        dateIdx = 0;
+ 
+    _barChart.updateChart();
 
-    text = document.getElementById("switchFilter").innerHTML;
+};
 
-    if(text === "Single Day: OFF"){
-        _barChart.singleDay();
-        document.getElementById("switchFilter").innerHTML = "Single Day: ON";
-    }
-    else{
-        _barChart.allDays();
-        document.getElementById("switchFilter").innerHTML = "Single Day: OFF";
-    }
-
-
-}
+// Start animation
+function start(){
+    incrementDate();
+};
