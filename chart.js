@@ -32,7 +32,7 @@ setup = function (dataPath) {
     var SVG = d3.select("#SVG_CONTAINER");
     d3.csv(dataPath).then(function (d) {
         d.sort(function(x, y){
-            return d3.descending(parseFloat(x.Price), parseFloat(y.Price));
+            return d3.ascending(parseFloat(x.Price), parseFloat(y.Price));
         });
         _barChart = new barChart(d, SVG);
         _barChart.draw();
@@ -58,14 +58,14 @@ barChart = function (data, svg) {
     filteredData = filterData(data, dateRange[dateIdx]);
 
     // creating scales for barchart
-    xScale = d3.scaleBand()
-        .domain(d3.range(filteredData.length)) 
+    xScale = d3.scaleLinear()
+        .domain([0, 100])
         .range([MARGIN.LEFT, width - MARGIN.RIGHT])
-        .padding(0.1) 
 
-    yScale = d3.scaleLinear()
-        .domain([0, 100])    
-        .range([height-MARGIN.BOTTOM, MARGIN.TOP]); 
+    yScale = d3.scaleBand()
+        .domain(d3.range(filteredData.length)) 
+        .range([height-MARGIN.BOTTOM, MARGIN.TOP])
+        .padding(0.1);
 
     //draws the initial barchart
     this.draw = function(){
@@ -83,10 +83,10 @@ barChart = function (data, svg) {
             .enter()
             .append('rect') 
             .attr("class", d => d.Ticker) 
-            .attr("x", (d,i) => xScale(i) )
-            .attr("y", d => yScale(d.Price)) 
-            .attr("width", xScale.bandwidth)
-            .attr("height", d => yScale(0) - yScale(d.Price))
+            .attr("x",  d => xScale(0))
+            .attr("y", (d,i) => yScale(i)) 
+            .attr("width", d => xScale(0) + xScale(d.Price)) 
+            .attr("height", yScale.bandwidth)
             .attr("fill", d => colorPalette[d.Ticker]);
 
         // add prices above bars
@@ -97,8 +97,8 @@ barChart = function (data, svg) {
         prices
             .enter()
             .append("text")
-            .attr("x", (d,i) => xScale(i) + 45)
-            .attr("y", d => yScale(d.Price) - 20)
+            .attr("x",  d => xScale(d.Price) + (2 * xScale(0)) + 10)
+            .attr("y", (d,i) => yScale(i) + 40) 
             .text(d => "$" + d.Price)
             .attr("font-family", "sans-serif")
             .attr("font-size", "20px")
@@ -106,6 +106,7 @@ barChart = function (data, svg) {
             
         //create the render specifications for y axis
         var yAxis = d3.axisLeft()
+            .tickFormat((d,i) => filteredData[i].Ticker)
             .scale(yScale);
 
         //draw the y axis on our chart
@@ -115,14 +116,14 @@ barChart = function (data, svg) {
             .call(yAxis);
 
         //create the render specifications for x axis
-        var xAxis = d3.axisBottom()
-            .tickFormat((d,i) => filteredData[i].Ticker)
+        var xAxis = d3.axisTop()
+            //.tickFormat((d,i) => filteredData[i].Ticker)
             .scale(xScale);
 
         //draw the x axis on our chart
         chart.append("g")
             .style("font", "20px times")
-            .attr("transform", "translate("+ 0 + ","+ (height-MARGIN.BOTTOM) +")")
+            .attr("transform", "translate("+ 0 + ","+ (MARGIN.TOP) +")")
             .attr("class", "xAxis")
             .call(xAxis);
     };
@@ -134,18 +135,6 @@ barChart = function (data, svg) {
 
         // get data for a specific date
         nextDateData = filterData(data, dateRange[dateIdx]);
-
-        xScale
-            .domain(d3.range(nextDateData.length));
-        
-            var newAxis = d3.axisBottom()
-                .tickFormat((d,i) => nextDateData[i].Ticker)
-                .scale(xScale)
-
-            svg.select(".xAxis")
-                .transition()
-                .duration(500)
-                .call(newAxis);
 
         bars = svg
             .select(".barChart")
@@ -159,10 +148,10 @@ barChart = function (data, svg) {
         bars
             .transition()
             .duration(500)
-            .attr("height", d => yScale(0) - yScale(d.Price))
-            .attr("width", xScale.bandwidth)
-            .attr("y", d => yScale(d.Price))
-            .attr("x", (d,i) => xScale(i))
+            .attr("x",  d => xScale(0))
+            .attr("y", (d,i) => yScale(i)) 
+            .attr("width", d => xScale(0) + xScale(d.Price)) 
+            .attr("height", yScale.bandwidth)
             .attr("fill", d => colorPalette[d.Ticker]);
 
         prices = svg
@@ -177,27 +166,28 @@ barChart = function (data, svg) {
         prices
             .transition()
             .duration(500)
-            .attr("x", (d,i) => xScale(i) + 45)
-            .attr("y", d => yScale(d.Price) - 20)
+            .attr("x",  d => xScale(d.Price) + (2 * xScale(0)) + 10)
+            .attr("y", (d,i) => yScale(i) + 40) 
             .text(d => "$" + d.Price)
             .attr("font-family", "sans-serif")
             .attr("font-size", "20px")
             .attr("fill", "black");
 
-        xScale = d3.scaleBand()
-            .domain(d3.range(nextDateData.length)) 
+        // creating scales for barchart
+        xScale = d3.scaleLinear()
+            .domain([0, 100])
             .range([MARGIN.LEFT, width - MARGIN.RIGHT])
-            .padding(0.1) 
-    
-        //the frequency of occurrence
-        yScale = d3.scaleLinear()
-            .domain([0, 100])    
-            .range([height-MARGIN.BOTTOM, MARGIN.TOP]);
+
+        yScale = d3.scaleBand()
+            .domain(d3.range(nextDateData.length)) 
+            .range([height-MARGIN.BOTTOM, MARGIN.TOP])
+            .padding(0.1);
 
         //create the render specifications for y axis
         var yAxis = d3.axisLeft()
+            .tickFormat((d,i) => nextDateData[i].Ticker)
             .scale(yScale);
-
+            
         //draw the y axis on our chart
         chart.append("g")
             .style("font", "20px times")
@@ -205,14 +195,13 @@ barChart = function (data, svg) {
             .call(yAxis);
 
         //create the render specifications for x axis
-        var xAxis = d3.axisBottom()
-            .tickFormat((d,i) => nextDateData[i].Ticker)
+        var xAxis = d3.axisTop()
             .scale(xScale);
 
         //draw the y axis on our chart
         chart.append("g")
             .style("font", "20px times")
-            .attr("transform", "translate("+ 0 + ","+ (height-MARGIN.BOTTOM) +")")
+            .attr("transform", "translate("+ 0 + ","+ (MARGIN.TOP) +")")
             .attr("class", "xAxis")
             .call(xAxis);
 
