@@ -27,15 +27,19 @@ let colorPalette = {
 //dimension of the  workspace
 const width  = 1920, height = 1080;
 var _barChart; //define a global reference for barchart
+var _lineChart;
 
 setup = function (dataPath) {
-    var SVG = d3.select("#SVG_CONTAINER");
+    var SVG_BAR = d3.select("#BAR_CHART");
+    var SVG_LINE = d3.select("#LINE_CHART");
     d3.csv(dataPath).then(function (d) {
         d.sort(function(x, y){
             return d3.ascending(parseFloat(x.Price), parseFloat(y.Price));
         });
-        _barChart = new barChart(d, SVG);
+        _barChart = new barChart(d, SVG_BAR);
+        // _lineChart = new barChart(d, SVG_LINE);
         _barChart.draw();
+        // _lineChart.draw();
 
     });
 };
@@ -85,7 +89,7 @@ barChart = function (data, svg) {
             .attr("class", d => d.Ticker) 
             .attr("x",  d => xScale(0))
             .attr("y", (d,i) => yScale(i)) 
-            .attr("width", d => xScale(0) + xScale(d.Price)) 
+            .attr("width", d => xScale(d.Price) - xScale(0)) 
             .attr("height", yScale.bandwidth)
             .attr("fill", d => colorPalette[d.Ticker]);
 
@@ -97,7 +101,7 @@ barChart = function (data, svg) {
         prices
             .enter()
             .append("text")
-            .attr("x",  d => xScale(d.Price) + (2 * xScale(0)) + 10)
+            .attr("x",  d => xScale(d.Price) + 10)
             .attr("y", (d,i) => yScale(i) + 40) 
             .text(d => "$" + d.Price)
             .attr("font-family", "sans-serif")
@@ -150,7 +154,7 @@ barChart = function (data, svg) {
             .duration(500)
             .attr("x",  d => xScale(0))
             .attr("y", (d,i) => yScale(i)) 
-            .attr("width", d => xScale(0) + xScale(d.Price)) 
+            .attr("width", d => xScale(d.Price) - xScale(0)) 
             .attr("height", yScale.bandwidth)
             .attr("fill", d => colorPalette[d.Ticker]);
 
@@ -166,7 +170,7 @@ barChart = function (data, svg) {
         prices
             .transition()
             .duration(500)
-            .attr("x",  d => xScale(d.Price) + (2 * xScale(0)) + 10)
+            .attr("x",  d => xScale(d.Price) + 10)
             .attr("y", (d,i) => yScale(i) + 40) 
             .text(d => "$" + d.Price)
             .attr("font-family", "sans-serif")

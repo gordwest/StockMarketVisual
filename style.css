@@ -1,4 +1,8 @@
-#SVG_CONTAINER{
+#BAR_CHART{
+    height: 1080px;
+    width: 1920px;
+}
+#LINE_CHART{
     height: 1080px;
     width: 1920px;
 }

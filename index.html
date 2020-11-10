@@ -5,6 +5,7 @@
         <link rel="stylesheet" type="text/css" href="style.css"/>
         <script src="https://d3js.org/d3.v6.min.js"></script>
         <script type = "text/javascript" src="chart.js"></script>
+        <script type = "text/javascript" src="lineChart.js"></script>
     </head>
 
     <body>
@@ -14,7 +15,10 @@
             <button id="start" onclick="start()" >Start Animation</button>
         </h1>
         <div id="MAIN" class="relative" style="text-align: center;">
-            <svg id="SVG_CONTAINER"></svg>
+            <svg id="BAR_CHART"></svg>
+        </div>
+        <div id="MAIN" class="relative" style="text-align: center;">
+            <svg id="LINE_CHART"></svg>
         </div>
     </body>
 </html>
