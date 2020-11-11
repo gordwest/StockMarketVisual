@@ -27,19 +27,15 @@ let colorPalette = {
 //dimension of the  workspace
 const width  = 1920, height = 1080;
 var _barChart; //define a global reference for barchart
-var _lineChart;
 
 setup = function (dataPath) {
     var SVG_BAR = d3.select("#BAR_CHART");
-    var SVG_LINE = d3.select("#LINE_CHART");
     d3.csv(dataPath).then(function (d) {
         d.sort(function(x, y){
             return d3.ascending(parseFloat(x.Price), parseFloat(y.Price));
         });
         _barChart = new barChart(d, SVG_BAR);
-        // _lineChart = new barChart(d, SVG_LINE);
         _barChart.draw();
-        // _lineChart.draw();
 
     });
 };

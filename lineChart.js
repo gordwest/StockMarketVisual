@@ -1,52 +1,59 @@
-// set the dimensions and margin2s of the graph
-var margin2 = {top: 10, right: 30, bottom: 30, left: 60},
-    width2 = 460 - margin2.left - margin2.right,
-    height2 = 400 - margin2.top - margin2.bottom;
 
-// append the svg object to the body of the page
-var svg = d3.select("#LINE_CHART")
-  .append("svg")
-    .attr("width", width2 + margin2.left + margin2.right)
-    .attr("height", height2 + margin2.top + margin2.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin2.left + "," + margin2.top + ")");
+// const MARGIN = {
+//   "LEFT":100,
+//   "RIGHT":100,
+//   "TOP":100,
+//   "BOTTOM":200,
+// };
+// const width  = 1920, height = 1080;
 
-//Read the data
-d3.csv("FormattedData.csv",
+var parseDate = d3.timeParse("%m/%d/%Y");
 
-  // When reading the csv, I must format variables:
-  function(d){
-    return { Date : d3.timeParse("%Y-%m-%d")(d.Date), Price : d.Price }
-  },
+d3.csv("FormattedData2.csv")
+  .then(function(d) { 
+    d.forEach(function(d) {
+      d.Date = parseDate(d.Date);
+      d.Price = parseFloat(d.Price);
+    });
+  
+    var minDate = d3.min(d, function(d) {return d.Date;});
+    var maxDate = d3.max(d, function(d) {return d.Date;});
+    var maxPrice = d3.max(d, function(d) {return d.Price;});
 
-  // Now I can use this dataset:
-  function(data) {
-
-    // Add X axis --> it is a Date format
-    var x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.Date; }))
-      .range([ 0, width2 ]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height2 + ")")
-      .call(d3.axisBottom(x));
-
-    // Add Y axis
     var y = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return +d.Price; })])
-      .range([ height2, 0 ]);
-    svg.append("g")
-      .call(d3.axisLeft(y));
+      .domain([0, maxPrice])
+      .range([height-MARGIN.BOTTOM, MARGIN.TOP])
 
-    // Add the line
-    svg.append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width2", 1.5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.Date) })
-        .y(function(d) { return y(d.Price) })
-        )
+    var x = d3.scaleTime()
+      .domain([minDate, maxDate])
+      .range([0, width - MARGIN.RIGHT])
 
-})
+    var yAxis = d3.axisLeft(y);
+    var xAxis = d3.axisBottom(x); 
+
+    var svg = d3.select("#LINE_CHART")
+    
+    var chart = svg.append("g")
+      .attr("transform", 'translate(50,50)');
+
+    var line = d3.line()
+      .x(function(d) { return x(d.Date);})
+      .y(function(d) { return y(d.Price);});
+
+    // draw line
+    chart.append('path')
+      .data(d)
+      .attr("d", line(d));
+
+      // add axis
+      chart.append('g')
+        .attr('class','x axis')
+        .attr("transform", "translate("+ 0 + ","+ (height - MARGIN.BOTTOM) + ")")
+        .call(xAxis)
+
+      chart.append('g')
+        .attr('class','y axis')
+        .call(yAxis)
+
+
+  });

@@ -6,3 +6,9 @@
     height: 1080px;
     width: 1920px;
 }
+
+path {
+    stroke: rgb(0, 0, 0);
+    stroke-width: 2px;
+    fill: none;
+}
