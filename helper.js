@@ -5,7 +5,7 @@ const MARGIN = {
     "LEFT":100,
     "RIGHT":100,
     "TOP":100,
-    "BOTTOM":200,
+    "BOTTOM":100,
 };
 
 let colors = {
@@ -31,8 +31,8 @@ function colorPalette (group) {
 };
 
 // get unique list of ETFs
-function groupTicker(d) {
-  all = d3.map(d, function(d){return(d.Ticker)});
+function groupHeader(d, header) {
+  all = d3.map(d, function(d){return(d[header])});
   return all.filter((item, i, ar) => ar.indexOf(item) === i);
 };
 

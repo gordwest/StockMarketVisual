@@ -6,13 +6,18 @@ d3.csv("FormattedData.csv")
     });
 
     // group ETFs so we can color them separately
-    let allTickers = groupTicker(d)
+    let allTickers = groupHeader(d, "Ticker")
     let colors = colorPalette(allTickers)
    
     // variables for axis ranges
     var minDate = d3.min(d, function(d) {return d.Date;});
     var maxDate = d3.max(d, function(d) {return d.Date;});
     var maxPrice = d3.max(d, function(d) {return d.Price;});
+
+    // selecting html element and appending the svg
+    var svg = d3.select("#LINE_CHART")
+    var chart = svg.append("g")
+      .attr("transform", 'translate(50,50)');
 
     // creating the scales
     var y = d3.scaleLinear()
@@ -27,11 +32,6 @@ d3.csv("FormattedData.csv")
     var yAxis = d3.axisLeft(y);
     var xAxis = d3.axisBottom(x); 
 
-    // selecting html element and appending the svg
-    var svg = d3.select("#LINE_CHART")
-    var chart = svg.append("g")
-      .attr("transform", 'translate(50,50)');
-
     var line = d3.line()
       .x(function(d) { return x(d.Date);})
       .y(function(d) { return y(d.Price);});
@@ -40,7 +40,7 @@ d3.csv("FormattedData.csv")
     for (var i = 0; i < allTickers.length; i++){
       chart.append('path')
         .attr("stroke", colors(allTickers[i]))
-        .attr("stroke-width", "2px")
+        .attr("stroke-width", "3px")
         .attr("fill", "none")
         .attr("d", line(d.filter(function(d){ return d.Ticker == allTickers[i]})));
     }

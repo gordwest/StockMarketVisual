@@ -1,6 +1,7 @@
-# Visualizng stock market data
+# Visualizing stock market data
 
 ## CPSC 583 project
 
 ### Goals
-- Animated bar chart for all ETFs over the time period
+- Provide insight on Canadian stock ETF performance over the last 5 years.
+- 6 visuals
