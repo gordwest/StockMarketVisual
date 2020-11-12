@@ -1,5 +1,5 @@
 function createBoxPlot(){ 
-  d3.csv("FormattedData.csv")
+  d3.csv("data/FormattedData.csv")
     .then(function(d) { 
       // parse data
       d.forEach(function(d) {
@@ -10,23 +10,29 @@ function createBoxPlot(){
       d.sort(function(a, b) { return +a.Price - +b.Price});
 
       let allTickers = groupHeader(d, "Ticker");
-      console.log(allTickers)
 
       // a few features for the box
-      var center = 150;
-      var width = 80;
+      const BOX= {
+        "CENTER" : 150,
+        "WIDTH" : 80
+      }
 
       var svg = d3.select("#BOX_PLOT")
       var chart = svg.append("g")
-        .attr("transform", 'translate(50,50)');
+        .attr("transform", 'translate(50,0)');
 
         // Show the Y scale
       var y = d3.scaleLinear()
-      .domain([0, d3.max(d, function(d) {return d.Price;})])
-      .range([height, 0]);
+        .domain([-5, d3.max(d, function(d) {return d.Price;})])
+        .range([HEIGHT, 0]);
+
+      var x = d3.scaleBand()
+        .domain(d3.range(allTickers.length))
+        .range([HEIGHT, 0]);
 
       chart
        .call(d3.axisLeft(y))
+      //  .call(d3.axisBottom(x))
 
       // filter by a given ticker
       for (var i = 0; i < allTickers.length; i++){
@@ -41,13 +47,11 @@ function createBoxPlot(){
         var min = q1 - 1.5 * interQuantileRange
         var max = q1 + 1.5 * interQuantileRange
 
-        console.log(allTickers[i], min, median, max);
-
         // Show the main vertical line
         chart
           .append("line")
-          .attr("x1", center)
-          .attr("x2", center)
+          .attr("x1", BOX.CENTER)
+          .attr("x2", BOX.CENTER)
           .attr("y1", y(min) )
           .attr("y2", y(max) )
           .attr("stroke", "black")
@@ -55,10 +59,10 @@ function createBoxPlot(){
         // Show the box
         chart
           .append("rect")
-          .attr("x", center - width/2)
+          .attr("x", BOX.CENTER - BOX.WIDTH/2)
           .attr("y", y(q3) )
           .attr("height", (y(q1)-y(q3)) )
-          .attr("width", width )
+          .attr("width", BOX.WIDTH )
           .attr("stroke", "black")
           .style("fill", colors[allTickers[i]])
 
@@ -68,13 +72,13 @@ function createBoxPlot(){
           .data([min, median, max])
           .enter()
           .append("line")
-          .attr("x1", center-width/2)
-          .attr("x2", center+width/2)
+          .attr("x1", BOX.CENTER - BOX.WIDTH/2)
+          .attr("x2", BOX.CENTER + BOX.WIDTH/2)
           .attr("y1", function(subsetData){ return(y(subsetData))} )
           .attr("y2", function(subsetData){ return(y(subsetData))} )
           .attr("stroke", "black")
 
-          center += width*2
+          BOX.CENTER += BOX.WIDTH * 2
       };
 
       
