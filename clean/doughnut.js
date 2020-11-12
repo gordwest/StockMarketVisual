@@ -1,10 +1,10 @@
-//var width = 450
-//height = 450
-//margin = 40
+var width = 450
+height = 450
+margin = 40
 
 
 
-function doughtnut(){
+function doughnut(){
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     var radius = Math.min(width, height) / 2 - margin
