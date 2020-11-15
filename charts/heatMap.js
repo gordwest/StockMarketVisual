@@ -1,3 +1,5 @@
+//Reference: https://www.d3-graph-gallery.com/index.html
+
 function createHeatMap(){
 
 // append the svg object to the body of the page
@@ -12,9 +14,9 @@ function createHeatMap(){
 //Read the data
     d3.csv("data/Data2.csv").then(function(data) {
 
-        // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
-        var myGroups = groupHeader(data, "group")
-        var myVars = groupHeader(data, "variable")
+        // Labels of row and columns using the unique names: 'date' and 'ticker'
+        var myGroups = groupHeader(data, "date")
+        var myVars = groupHeader(data, "ticker")
 
         // Build X scales and axis:
         var x = d3.scaleBand()
@@ -53,7 +55,7 @@ function createHeatMap(){
             .style("border-radius", "5px")
             .style("padding", "5px")
 
-        // Three function that change the tooltip when user hover / move / leave a cell
+        // Three function that change the tooltip when user hovers
         var mouseover = function(d) {
             tooltip
                 .style("opacity", 1)
@@ -63,7 +65,7 @@ function createHeatMap(){
         }
         var mousemove = function(d) {
             tooltip
-                .html("The price of " + d.variable + " on "  + d.group + " was " + d.value)
+                .html("The price of " + d.ticker + " on "  + d.date + " was " + d.value)
                 .style("left", (d3.mouse(this)[0]+70) + "px")
                 .style("top", (d3.mouse(this)[1]) + "px")
         }
@@ -75,13 +77,13 @@ function createHeatMap(){
                 .style("opacity", 0.8)
         }
 
-        // add the squares
+        // add the squares for the map
         svg.selectAll()
-            .data(data, function(d) {return d.group+':'+d.variable;})
+            .data(data, function(d) {return d.date+':'+d.ticker;})
             .enter()
             .append("rect")
-            .attr("x", function(d) { return x(d.group) })
-            .attr("y", function(d) { return y(d.variable) })
+            .attr("x", function(d) { return x(d.date) })
+            .attr("y", function(d) { return y(d.ticker) })
             .attr("rx", 4)
             .attr("ry", 4)
             .attr("width", x.bandwidth() )
@@ -95,7 +97,7 @@ function createHeatMap(){
             .on("mouseleave", mouseleave)
     })
 
-// Add title to graph
+// Add title
     svg.append("text")
         .attr("x", 0)
         .attr("y", -50)
@@ -103,7 +105,7 @@ function createHeatMap(){
         .style("font-size", "22px")
         .text("An ETF Heatmap");
 
-// Add subtitle to graph
+// Add subtitle
     svg.append("text")
         .attr("x", 0)
         .attr("y", -20)

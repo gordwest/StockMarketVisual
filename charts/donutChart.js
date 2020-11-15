@@ -1,3 +1,5 @@
+//Reference: https://www.d3-graph-gallery.com/index.html
+
 function createDonutChart(){
 
     // The radius of the pieplot is half the WIDTH or half the HEIGHT (smallest one). I subtract a bit of margin.
@@ -17,23 +19,23 @@ function createDonutChart(){
             .domain(data.map(function(d) { return d.Ticker; }))
             .range(d3.schemeDark2);
 
-        // Compute the position of each group on the pie:
+        // This section will compute the position of each group on the pie
         var pie = d3.pie()
             .sort(null) // Do not sort group by size
             .value(function(d) {return d.Price; })
         var data_ready = pie(data)
 
-        // The arc generator
+        // arc generator
         var arc = d3.arc()
             .innerRadius(radius * 0.5)         // This is the size of the donut hole
             .outerRadius(radius * 0.8)
 
-        // Another arc that won't be drawn. Just for labels positioning
+
         var outerArc = d3.arc()
             .innerRadius(radius * 0.9)
             .outerRadius(radius * 0.9)
 
-        // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+        // Build the pie chart
         svg
             .selectAll('allSlices')
             .data(data_ready)
@@ -63,7 +65,7 @@ function createDonutChart(){
                 return [posA, posB, posC]
             })
 
-        // Add the polylines between chart and labels:
+
         svg
             .selectAll('allLabels')
             .data(data_ready)

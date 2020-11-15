@@ -1,3 +1,5 @@
+//Reference: https://www.d3-graph-gallery.com/index.html
+
 var innerRadius = 90,
     outerRadius = Math.min(WIDTH, HEIGHT) / 2;   // the outerRadius goes from the middle of the SVG area to the border
 
@@ -25,12 +27,12 @@ function createDoubleChart(){
             .range([innerRadius, outerRadius])   // Domain will be define later.
             .domain([0, 80]); // Domain of Y is from 0 to the max seen in the data
 
-        // Second barplot Scales
+        // scales for second set of bars
         var ybis = d3.scaleRadial()
             .range([innerRadius, 5])   // Domain will be defined later.
             .domain([0, 80]);
 
-        // Add the bars
+        // Add bars
         svg.append("g")
             .selectAll("path")
             .data(data)
@@ -46,7 +48,7 @@ function createDoubleChart(){
                 .padAngle(0.01)
                 .padRadius(innerRadius))
 
-        // Add the labels
+        // Add labels
         svg.append("g")
             .selectAll("g")
             .data(data)
@@ -60,7 +62,7 @@ function createDoubleChart(){
             .style("font-size", "16px")
             .attr("alignment-baseline", "middle")
 
-        // Add the second series
+        // Add second series
         svg.append("g")
             .selectAll("path")
             .data(data)
