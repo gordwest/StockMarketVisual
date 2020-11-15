@@ -1,6 +1,6 @@
 function createLineChart(){
 
-  d3.csv("FormattedData.csv")
+  d3.csv("data/FormattedData.csv")
     .then(function(d) { 
       d.forEach(function(d) {
         d.Date = parseDate(d.Date);
@@ -19,16 +19,16 @@ function createLineChart(){
       // selecting html element and appending the svg
       var svg = d3.select("#LINE_CHART")
       var chart = svg.append("g")
-        .attr("transform", 'translate(50,50)');
+        .attr("transform", 'translate(50,0)');
 
       // creating the scales
       var y = d3.scaleLinear()
         .domain([0, maxPrice])
-        .range([height-MARGIN.BOTTOM, MARGIN.TOP])
+        .range([HEIGHT-MARGIN.BOTTOM, MARGIN.TOP])
 
       var x = d3.scaleTime()
         .domain([minDate, maxDate])
-        .range([0, width - MARGIN.RIGHT])
+        .range([0, WIDTH - MARGIN.RIGHT])
 
       // creating the axises
       var yAxis = d3.axisLeft(y);
@@ -50,7 +50,7 @@ function createLineChart(){
       // add axises
       chart.append('g')
         .attr('class','x axis')
-        .attr("transform", "translate("+ 0 + ","+ (height - MARGIN.BOTTOM) + ")")
+        .attr("transform", "translate("+ 0 + ","+ (HEIGHT - MARGIN.BOTTOM) + ")")
         .call(xAxis)
 
       chart.append('g')

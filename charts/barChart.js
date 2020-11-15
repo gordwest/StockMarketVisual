@@ -1,6 +1,6 @@
 function createBarChart() {
     var SVG_BAR = d3.select("#BAR_CHART");
-    d3.csv("FormattedData.csv").then(function (d) {
+    d3.csv("data/FormattedData.csv").then(function (d) {
         d.sort(function(x, y){
             return d3.ascending(parseFloat(x.Price), parseFloat(y.Price));
         });
@@ -17,11 +17,11 @@ barChart = function (data, svg) {
     // creating scales for barchart
     xScale = d3.scaleLinear()
         .domain([0, 100])
-        .range([MARGIN.LEFT, width - MARGIN.RIGHT])
+        .range([MARGIN.LEFT, WIDTH - MARGIN.RIGHT])
 
     yScale = d3.scaleBand()
         .domain(d3.range(filteredData.length)) 
-        .range([height-MARGIN.BOTTOM, MARGIN.TOP])
+        .range([HEIGHT-MARGIN.BOTTOM, MARGIN.TOP])
         .padding(0.1);
 
     //draws the initial barchart
@@ -132,11 +132,11 @@ barChart = function (data, svg) {
         // creating scales for barchart
         xScale = d3.scaleLinear()
             .domain([0, 100])
-            .range([MARGIN.LEFT, width - MARGIN.RIGHT])
+            .range([MARGIN.LEFT, WIDTH - MARGIN.RIGHT])
 
         yScale = d3.scaleBand()
             .domain(d3.range(nextDateData.length)) 
-            .range([height-MARGIN.BOTTOM, MARGIN.TOP])
+            .range([HEIGHT-MARGIN.BOTTOM, MARGIN.TOP])
             .padding(0.1);
 
         //create the render specifications for y axis

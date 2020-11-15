@@ -19,14 +19,22 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97e53012-50c7-4535-b1df-86088571f716" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/boxPlot.js" afterDir="false" />
+    <list default="true" id="97e53012-50c7-4535-b1df-86088571f716" name="Default Changelist" comment="Merge branch 'master' of https://github.com/gordwest/StockMarketVisual&#10;&#10;# Conflicts:&#10;#&#9;barChart.js&#10;#&#9;chart.js&#10;#&#9;charts/barChart.js&#10;#&#9;index.html&#10;#&#9;lineChart.js&#10;#&#9;style.css">
+      <change afterPath="$PROJECT_DIR$/charts/boxPlot.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/charts/donutChart.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/charts/doubleChart.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/charts/heatMap.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/Data.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/Data2.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/barChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CPSC-583-Project-Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/CPSC-583-Project-Data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FormattedData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/FormattedData.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FormattedData2.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/barChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/charts/barChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/chart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper.js" beforeDir="false" afterPath="$PROJECT_DIR$/charts/helper.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lineChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/lineChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lineChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/charts/lineChart.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,6 +51,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="ProjectId" id="1jyZEL4gim9S085M4zfsJcgJZT7" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -53,7 +62,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Final Stock Mkt" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -68,6 +77,7 @@
       <workItem from="1604778180260" duration="2785000" />
       <workItem from="1604941035115" duration="994000" />
       <workItem from="1604945650523" duration="15270000" />
+      <workItem from="1605417848706" duration="1822000" />
     </task>
     <servers />
   </component>
@@ -84,11 +94,33 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/gordwest/StockMarketVisual&#10;&#10;# Conflicts:&#10;#&#9;barChart.js&#10;#&#9;chart.js&#10;#&#9;charts/barChart.js&#10;#&#9;index.html&#10;#&#9;lineChart.js&#10;#&#9;style.css" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/gordwest/StockMarketVisual&#10;&#10;# Conflicts:&#10;#&#9;barChart.js&#10;#&#9;chart.js&#10;#&#9;charts/barChart.js&#10;#&#9;index.html&#10;#&#9;lineChart.js&#10;#&#9;style.css" />
   </component>
   <component name="WindowStateProjectService">
     <state x="421" y="100" key="FileChooserDialogImpl" timestamp="1605217473202">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
     <state x="421" y="100" key="FileChooserDialogImpl/0.0.1280.689/1920.0.1920.1050@0.0.1280.689" timestamp="1605217473202" />
+    <state x="280" y="107" key="MultipleFileMergeDialog" timestamp="1605417926645">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="280" y="107" key="MultipleFileMergeDialog/0.0.1280.689/1920.0.1920.1050@0.0.1280.689" timestamp="1605417926645" />
+    <state x="233" y="78" key="Vcs.Push.Dialog.v2" timestamp="1605419575230">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="233" y="78" key="Vcs.Push.Dialog.v2/0.0.1280.689/1920.0.1920.1050@0.0.1280.689" timestamp="1605419575230" />
+    <state x="458" y="259" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1605417918338">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="458" y="259" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.689/1920.0.1920.1050@0.0.1280.689" timestamp="1605417918338" />
+    <state x="303" y="10" key="search.everywhere.popup" timestamp="1605419171543">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="303" y="10" key="search.everywhere.popup/0.0.1280.689/1920.0.1920.1050@0.0.1280.689" timestamp="1605419171543" />
   </component>
 </project>
