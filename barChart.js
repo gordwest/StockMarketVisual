@@ -1,14 +1,6 @@
-window.onload = function(){
-    setup("FormattedData.csv");
-};
-
-var dateIdx = 0
-
-var _barChart; //define a global reference for barchart
-
-setup = function (dataPath) {
+function createBarChart() {
     var SVG_BAR = d3.select("#BAR_CHART");
-    d3.csv(dataPath).then(function (d) {
+    d3.csv("FormattedData.csv").then(function (d) {
         d.sort(function(x, y){
             return d3.ascending(parseFloat(x.Price), parseFloat(y.Price));
         });
@@ -21,9 +13,6 @@ barChart = function (data, svg) {
 
     // get data for specific date
     filteredData = filterData(data, dateRange[dateIdx]);
-
-    // let allTickers = groupTicker(data);
-    // let colors = colorPalette(allTickers);
 
     // creating scales for barchart
     xScale = d3.scaleLinear()
@@ -189,7 +178,6 @@ function incrementDate() {
         console.log("Animation is finished!")
         dateIdx = 0;
     }
- 
 };
 
 // Start animation

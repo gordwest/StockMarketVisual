@@ -20,9 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97e53012-50c7-4535-b1df-86088571f716" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/helper.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boxPlot.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/chart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/barChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lineChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/lineChart.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
@@ -51,7 +53,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Submission3" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Final Stock Mkt" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -65,7 +67,7 @@
       <updated>1604778178939</updated>
       <workItem from="1604778180260" duration="2785000" />
       <workItem from="1604941035115" duration="994000" />
-      <workItem from="1604945650523" duration="13241000" />
+      <workItem from="1604945650523" duration="15270000" />
     </task>
     <servers />
   </component>
@@ -84,9 +86,9 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="421" y="100" key="FileChooserDialogImpl" timestamp="1604965088557">
+    <state x="421" y="100" key="FileChooserDialogImpl" timestamp="1605217473202">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="421" y="100" key="FileChooserDialogImpl/0.0.1280.689/1920.0.1920.1050@0.0.1280.689" timestamp="1604965088557" />
+    <state x="421" y="100" key="FileChooserDialogImpl/0.0.1280.689/1920.0.1920.1050@0.0.1280.689" timestamp="1605217473202" />
   </component>
 </project>
