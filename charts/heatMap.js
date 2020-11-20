@@ -92,9 +92,23 @@ function createHeatMap(){
             .style("stroke-width", 4)
             .style("stroke", "none")
             .style("opacity", 0.8)
-            .on("mouseover", mouseover)
-            .on("mousemove", mousemove)
-            .on("mouseleave", mouseleave)
+            .on("mouseover", function(event,d){
+                tooltip
+                    .html("The price of " + d.ticker + " on "  + d.date + " was " + d.value)
+                    .style("opacity", 1)
+                    .style("left", (event.screenX+70) + "px")
+                    .style("top", (event.screenY) + "px")
+                d3.select(this)
+                    .style("stroke", "black")
+                    .style("opacity", 1)
+            })
+            .on("mouseleave", function(event,d){
+                tooltip
+                    .style("opacity", 0)
+                d3.select(this)
+                    .style("stroke", "none")
+                    .style("opacity", 0.8)
+            })
     })
 
 // Add title
