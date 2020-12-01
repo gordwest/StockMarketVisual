@@ -17,8 +17,8 @@ function createLineChart(){
       var maxPrice = d3.max(d, function(d) {return d.Price;});
 
       // selecting html element and appending the svg
-      var svg = d3.select("#LINE_CHART")
-      var chart = svg.append("g")
+      var chart = d3.select("#LINE_CHART")
+        .append("g")
         .attr("transform", 'translate(50,0)');
 
       // creating the scales
@@ -38,14 +38,23 @@ function createLineChart(){
         .x(function(d) { return x(d.Date);})
         .y(function(d) { return y(d.Price);});
 
-      // loop through groups and draw line
-      for (var i = 0; i < allTickers.length; i++){
-        chart.append('path')
-          .attr("stroke", colors[allTickers[i]])
-          .attr("stroke-width", "4px")
-          .attr("fill", "none")
-          .attr("d", line(d.filter(function(d){ return d.Ticker == allTickers[i]})));
-      }
+      var groupData = d3.group(d, d => d.Ticker)
+      var tickers = groupHeader(d, "Ticker")
+      var color = d3.scaleOrdinal()
+        .domain(tickers)
+        .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#00008B','#a65628','#f781bf','#999999','#000000'])
+
+      chart.selectAll('.line')
+        .data(groupData)
+        .enter()
+        .append('path')
+        .attr('d', function(d) { 
+          return line(d[1])
+        })
+        .attr("fill", "none")
+        .attr("stroke-width", "3px")
+        .attr("stroke", d => color(d[0]))
+
       
       // add axises
       chart.append('g')
