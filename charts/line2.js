@@ -5,8 +5,13 @@ function makeLineChart() {
         .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
         .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
         .append("g")
-        .attr("transform",
-            "translate(150,-100)");
+        .attr("transform", "translate(150,-100)");
+        
+    var legend = d3.select('#LINE_LEGEND')
+        .append("svg")
+        .attr("width", 300)
+        .attr("height", HEIGHT)
+        .attr("transform", "translate(-200,-100)");
 
     //Read the data
     d3.csv("data/FormattedData.csv")
@@ -25,7 +30,7 @@ function makeLineChart() {
             .domain([minDate, maxDate])
             .range([0, WIDTH - MARGIN.RIGHT])
         xAxis = svg.append("g")
-            .attr("transform", "translate(0," + (HEIGHT-MARGIN.BOTTOM) + ")")
+            .attr("transform", "translate(0," + (HEIGHT) + ")")
             .call(d3.axisBottom(x));
 
         xAxis.selectAll(".tick text")
@@ -37,6 +42,7 @@ function makeLineChart() {
             .domain([0, maxPrice])
             .range([HEIGHT-MARGIN.BOTTOM, MARGIN.TOP])
         yAxis = svg.append("g")
+            .attr("transform", "translate(0," + (MARGIN.BOTTOM) + ")")
             .call(d3.axisLeft(y));
 
         yAxis.selectAll(".tick text")
@@ -55,11 +61,12 @@ function makeLineChart() {
 
         // Add brushing
         var brush = d3.brushX()                  
-            .extent( [ [0,100], [WIDTH, HEIGHT-MARGIN.TOP] ] )  
+            .extent( [ [0,200], [WIDTH, HEIGHT] ] )  
             .on("end", updateChart)             
 
         var line = svg.append('g')
-        .attr("clip-path", "url(#clip)")
+            // .attr("transform", "translate(0," + (MARGIN.BOTTOM) + ")")
+            .attr("clip-path", "url(#clip)")
 
         var drawLine = d3.line()
             .x(function(d) { return x(d.Date);})
@@ -85,13 +92,40 @@ function makeLineChart() {
             })
             .attr("fill", "none")
             .attr("stroke", d => color(d[0]))
-            .attr("stroke-width", 3)
+            .attr("stroke-width", 2)
+            .attr("transform", "translate(0," + (MARGIN.BOTTOM) + ")")
 
         // Add the brushing
         line
             .append("g")
             .attr("class", "brush")
             .call(brush);
+
+        // Add one dot in the legend for each name.
+        line.selectAll("mydots")
+            .data(tickers)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d,i){ return 50 + i*160})
+            .attr("cy", 150)
+            .attr("r", 15)
+            .style("fill", function(d){ return color(d)})
+            .on("mouseover", function(d) {
+                console.log(d)
+            })
+
+        // Add one dot in the legend for each name.
+        line.selectAll("mylabels")
+            .data(tickers)
+            .enter()
+            .append("text")
+            .attr("x", function(d,i){ return 70 + i*160})
+            .attr("y", 152)
+            .style("fill", function(d){ return color(d)})
+            .text(function(d){ return sectors[d]})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "middle")
+            .style("font-size", "20")
 
         // set idleTimeOut to null
         var idleTimeout

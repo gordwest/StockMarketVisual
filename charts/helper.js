@@ -11,17 +11,17 @@ const MARGIN = {
 // For bar chart
 var dateIdx = 0
 var _barChart; //define a global reference for barchart
-let colors = {
-    "XST.TO": "#FF0000",
-    "XHC.TO": "#e8871a",
-    "XQQ.TO": "#00c0c7",
-    "XFN.TO": "#9089fa",
-    "XIC.TO": "#2780eb",
-    "XUT.TO": "#47e26f",
-    "XRE.TO": "#dfbf03",
-    "XIT.TO": "#da3490",
-    "XEG.TO": "#268d6c",
-    "XGD.TO": "#6f38b1",
+let sectors = {
+    "XST.TO": "Consumer",
+    "XHC.TO": "Healthcare",
+    "XQQ.TO": "Nasdaq",
+    "XFN.TO": "Financial",
+    "XIC.TO": "Composite",
+    "XUT.TO": "Utilities",
+    "XRE.TO": "Real Estate",
+    "XIT.TO": "Technology",
+    "XEG.TO": "Energy",
+    "XGD.TO": "Gold",
     }
 
 var parseDate = d3.timeParse("%m/%d/%Y");
