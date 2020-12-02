@@ -19,6 +19,7 @@ function createLineChart(){
       // selecting html element and appending the svg
       var chart = d3.select("#LINE_CHART")
         .append("g")
+        .attr("clip-path", "url(#clip)")
         .attr("transform", 'translate(50,0)');
 
       // creating the scales
@@ -34,9 +35,22 @@ function createLineChart(){
       var yAxis = d3.axisLeft(y);
       var xAxis = d3.axisBottom(x); 
 
+      var clip = chart.append("defs").append("svg:clipPath")
+        .attr("id", "clip")
+        .append("svg:rect")
+        .attr("width", WIDTH )
+        .attr("height", HEIGHT )
+        .attr("x", 0)
+        .attr("y", 0);
+
       var line = d3.line()
         .x(function(d) { return x(d.Date);})
         .y(function(d) { return y(d.Price);});
+
+      // Add brushing
+      var brush = d3.brushX()                  
+        .extent( [ [0,100], [WIDTH, HEIGHT-MARGIN.TOP] ] )  
+        .on("end", updateChart)  
 
       var groupData = d3.group(d, d => d.Ticker)
       var tickers = groupHeader(d, "Ticker")
@@ -55,7 +69,11 @@ function createLineChart(){
         .attr("stroke-width", "3px")
         .attr("stroke", d => color(d[0]))
 
-      
+      chart
+        .append('g')
+        .attr("class", "brush")
+        .call(brush)
+
       // add axises
       chart.append('g')
         .attr('class','x axis')
@@ -65,5 +83,34 @@ function createLineChart(){
       chart.append('g')
         .attr('class','y axis')
         .call(yAxis)
+
+      var idleTimeout
+      function idled() { idleTimeout = null; }
+  
+      function updateChart() {
+        // What are the selected boundaries?
+        extent = d3.event.selection
+        console.log(extent)
+  
+        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        if(!extent){
+          if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+          x.domain([ 4,8])
+        }else{
+          x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+          line.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+        }
+  
+        // Update axis and line position
+        xAxis.transition().duration(1000).call(d3.axisBottom(x))
+        line
+            .select('.line')
+            .transition()
+            .duration(1000)
+            .attr('d', function(d) { 
+              return line(d[1])
+            })
+      }
     });
+
 }
