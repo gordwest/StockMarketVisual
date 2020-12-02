@@ -20,22 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97e53012-50c7-4535-b1df-86088571f716" name="Default Changelist" comment="Merge branch 'master' of https://github.com/gordwest/StockMarketVisual&#10;&#10;# Conflicts:&#10;#&#9;barChart.js&#10;#&#9;chart.js&#10;#&#9;charts/barChart.js&#10;#&#9;index.html&#10;#&#9;lineChart.js&#10;#&#9;style.css">
-      <change afterPath="$PROJECT_DIR$/charts/boxPlot.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/charts/donutChart.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/charts/doubleChart.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/charts/heatMap.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Data.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Data2.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CPSC-583-Project-Data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/CPSC-583-Project-Data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FormattedData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/FormattedData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FormattedData2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/barChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/charts/barChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/chart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper.js" beforeDir="false" afterPath="$PROJECT_DIR$/charts/helper.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lineChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/charts/lineChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,6 +63,7 @@
       <workItem from="1604941035115" duration="994000" />
       <workItem from="1604945650523" duration="15270000" />
       <workItem from="1605417848706" duration="1822000" />
+      <workItem from="1606942348897" duration="65000" />
     </task>
     <servers />
   </component>
