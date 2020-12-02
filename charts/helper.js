@@ -1,5 +1,5 @@
 //dimension of the  workspace
-const WIDTH  = 1920, HEIGHT = 1080;
+const WIDTH  = 1920*0.9, HEIGHT = 1080*0.9;
 
 const MARGIN = {
     "LEFT":100,
