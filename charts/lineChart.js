@@ -15,23 +15,40 @@ function makeLineChart() {
         .attr("transform",
             "translate(" + MARGIN.LEFT + "," + MARGIN.TOP + ")");
 
-
     //Read the data
     d3.csv("data/FormattedData.csv")
         .then(function(d) { 
+            keepData = [];
+            //for (i =0;i<data.length; i++)
+            d.forEach(function(d){
+                //console.log(d);
+                // console.log(d.Date)
+                //if(d.Date == parseDate("12/31/2015") || d.Date == parseDate("12/29/2016") || d.Date === parseDate("12/29/2017")|| d.Date === parseDate("12/21/2018") || d.Date === parseDate("12/31/2019") || d.Date === parseDate("9/18/2020")) {
+                if(d.Date === "12/31/2015" || d.Date === "12/29/2016" || d.Date === "12/29/2017"|| d.Date === "12/21/2018" || d.Date === "12/31/2019" || d.Date === "9/18/2020"){
+
+                    keepData.push(d)
+                    // d = d;
+                }
+            })
+
         d.forEach(function(d) {
             d.Date = parseDate(d.Date);
             d.Price = parseFloat(d.Price);
         });
 
-        // initialize some variables for later
+            console.log(keepData);
+            
+
+
+        // line chart vars
         var minDate = d3.min(d, function(d) {return d.Date;});
         var maxDate = d3.max(d, function(d) {return d.Date;});
         var maxPrice = d3.max(d, function(d) {return d.Price;});
 
         // Labels of row and columns using the unique names: 'date' and 'ticker'
-        var myGroups = groupHeader(d, "date")
-        var myVars = groupHeader(d, "ticker")
+        var myGroups = groupHeader(keepData, "Date")
+        var myVars = groupHeader(keepData, "Ticker")
+        console.log(myVars)
 
         // Add X axis
         var x = d3.scaleTime()
@@ -59,14 +76,14 @@ function makeLineChart() {
             .attr("font-size","16")
             .attr("fill","black")
 
-
-        // Build X scales and axis for heatMap
+        // Build X scales and axis for heatMap ########################################################
         var x_heatMap = d3.scaleBand()
             .range([0, WIDTH - MARGIN.RIGHT])
             .domain(myGroups)
             .padding(0.05);
         heatMap.append("g")
             .style("font-size", 14)
+            .style("opacity", "0")
             .attr("transform", "translate(0," + (HEIGHT - 200) + ")")
             .call(d3.axisBottom(x_heatMap).tickSize(0))
             .select(".domain").remove()
@@ -83,14 +100,14 @@ function makeLineChart() {
 
         // Build color scale
         var myColor = d3.scaleSequential()
-            .interpolator(d3.interpolateInferno)
+            .interpolator(d3.interpolateGreens)
             .domain([1,100])
 
         // create a tooltip
         var tooltip_heatMap = d3.select("#HEAT_TOOLTIP")
             .append("div")
             .style("opacity", 0)
-            .attr("class", "tooltip")
+            .attr("class", "tooltip_heat")
             .style("background-color", "white")
             .style("border", "solid")
             .style("border-width", "2px")
@@ -107,7 +124,7 @@ function makeLineChart() {
         }
         var mousemove = function(d) {
             tooltip_heatMap
-                .html("The price of " + d.ticker + " on "  + d.date + " was " + d.value)
+                .html("The price of " + d.Ticker + " on "  + d.Date + " was " + d.Price)
                 .style("left", (d3.mouse(this)[0]+70) + "px")
                 .style("top", (d3.mouse(this)[1]) + "px")
         }
@@ -121,22 +138,22 @@ function makeLineChart() {
 
         // add the squares for the map
         heatMap.selectAll()
-            .data(d, function(d) {return d.date+':'+d.ticker;})
+            .data(keepData, function(d) {return d.Date+':'+d.Ticker;})
             .enter()
             .append("rect")
-            .attr("x", function(d) { return x(d.date) })
-            .attr("y", function(d) { return y(d.ticker) })
+            .attr("x", function(d) { return x_heatMap(d.Date) })
+            .attr("y", function(d) { return y_heatMap(d.Ticker) })
             .attr("rx", 4)
             .attr("ry", 4)
             .attr("width", x_heatMap.bandwidth() )
             .attr("height", y_heatMap.bandwidth() )
-            .style("fill", function(d) { return myColor(d.value)} )
+            .style("fill", function(d) { return myColor(d.Price)} )
             .style("stroke-width", 4)
             .style("stroke", "none")
             .style("opacity", 0.8)
             .on("mouseover", function(event,d){
-                tooltip
-                    .html("The price of " + d.ticker + " on "  + d.date + " was " + d.value)
+                tooltip_heatMap
+                    .html("The price of " + d.Ticker + " on "  + d.Date + " was " + d.Price)
                     .style("opacity", 1)
                     .style("left", (event.screenX+70) + "px")
                     .style("top", (event.screenY) + "px")
@@ -145,31 +162,12 @@ function makeLineChart() {
                     .style("opacity", 1)
             })
             .on("mouseleave", function(event,d){
-                tooltip
+                tooltip_heatMap
                     .style("opacity", 0)
                 d3.select(this)
                     .style("stroke", "none")
                     .style("opacity", 0.8)
             })
-    
-
-        // Add title
-        heatMap.append("text")
-            .attr("x", 0)
-            .attr("y", -50)
-            .attr("text-anchor", "left")
-            .style("font-size", "22px")
-            .text("An ETF Heatmap");
-
-    // Add subtitle
-        heatMap.append("text")
-            .attr("x", 0)
-            .attr("y", -20)
-            .attr("text-anchor", "left")
-            .style("font-size", "14px")
-            .style("fill", "grey")
-            .style("max-width", 400)
-            .text("This heatmap shows the value on the last trading day for each year of our data ");
 // #################################################################################################################
 
         // add a clipPath

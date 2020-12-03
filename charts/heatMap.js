@@ -3,7 +3,7 @@
 function createHeatMap(){
 
 // append the svg object to the body of the page
-    var svg = d3.select("#HEAT_MAP")
+    var svg = d3.select("#HEAT_MAP1")
         .append("svg")
         .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
         .attr("height", HEIGHT)
