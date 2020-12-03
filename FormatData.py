@@ -2,7 +2,7 @@ import pandas as pd
 
 
 # read data
-rawData = pd.read_csv("CPSC-583-Project-Data.csv")
+rawData = pd.read_csv("C:/users/gordi/Desktop/Code/Projects/StockMarketVisual/Data/CPSC-583-Project-Data.csv")
 headers = list(rawData.columns)
 
 # new table
@@ -15,9 +15,9 @@ for index, row in rawData.iterrows():
     offset += 11
     while idx < len(headers)-1:
         newFormat.loc[offset + idx, 'Date'] = row[0]
-        newFormat.loc[offset + idx, 'Ticker'] = headers[idx+1]
+        newFormat.loc[offset + idx, 'Ticker'] = headers[idx+1][0:3]
         newFormat.loc[offset + idx, 'Price'] = row[idx+1]
         idx += 1
 
 print(newFormat.head(22))
-newFormat.to_csv('C:/users/gordi/Desktop/Code/Projects/StockMarketVisual/FormattedData.csv', index=False)
+newFormat.to_csv('C:/users/gordi/Desktop/Code/Projects/StockMarketVisual/Data/FormattedData1.csv', index=False)
