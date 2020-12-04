@@ -2,15 +2,15 @@ function makeLineChart() {
     // append the svg object to the body of the page
     var svg = d3.select("#LINE_CHART")
         .append("svg")
-        .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
-        .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
+        .attr("width", WIDTH_LINE + MARGIN.LEFT + MARGIN.RIGHT)
+        .attr("height", HEIGHT_LINE + MARGIN.TOP + MARGIN.BOTTOM)
         .append("g")
         .attr("transform", "translate(150,-100)");
 
     var heatMap = d3.select("#HEAT_MAP")
         .append("svg")
-        .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
-        .attr("height", HEIGHT)
+        .attr("width", WIDTH_HEAT + MARGIN.LEFT + MARGIN.RIGHT)
+        .attr("height", HEIGHT_HEAT)
         .append("g")
         .attr("transform",
             "translate(" + MARGIN.LEFT + "," + MARGIN.TOP + ")");
@@ -18,18 +18,20 @@ function makeLineChart() {
     //Read the data
     d3.csv("data/FormattedData.csv")
         .then(function(d) { 
-            keepData = [];
-            d.forEach(function(d){
-                //if(d.Date == parseDate("12/31/2015") || d.Date == parseDate("12/29/2016") || d.Date === parseDate("12/29/2017")|| d.Date === parseDate("12/21/2018") || d.Date === parseDate("12/31/2019") || d.Date === parseDate("9/18/2020")) {
-                if(d.Date === "12/31/2015" || d.Date === "12/29/2016" || d.Date === "12/29/2017"|| d.Date === "12/21/2018" || d.Date === "12/31/2019" || d.Date === "9/18/2020"){
-                    keepData.push(d)
-                }
-            })
-
         d.forEach(function(d) {
             d.Date = parseDate(d.Date);
             d.Price = parseFloat(d.Price);
         });
+        var keepData = [];
+            d.forEach(function(d){
+                if(+d.Date == +parseDate("12/31/2015") || +d.Date == +parseDate("12/29/2016") || +d.Date === +parseDate("12/29/2017")|| +d.Date === +parseDate("12/21/2018") || +d.Date === +parseDate("12/31/2019") || +d.Date === +parseDate("9/18/2020")) {
+                        keepData.push(d)
+                    }
+                });
+
+        // keepData.forEach(function(keepData) {
+        //     keepData.Date = keepData.Date.toString().slice(4,15);
+        // });
 
         // line chart vars
         var minDate = d3.min(d, function(d) {return d.Date;});
@@ -39,14 +41,13 @@ function makeLineChart() {
         // Labels of row and columns using the unique names: 'date' and 'ticker'
         var myGroups = groupHeader(keepData, "Date")
         var myVars = groupHeader(keepData, "Ticker")
-        console.log(myVars)
 
         // Add X axis
         var x = d3.scaleTime()
             .domain([minDate, maxDate])
-            .range([0, WIDTH - MARGIN.RIGHT])
+            .range([0, WIDTH_LINE - MARGIN.RIGHT])
         xAxis = svg.append("g")
-            .attr("transform", "translate(0," + (HEIGHT) + ")")
+            .attr("transform", "translate(0," + (HEIGHT_LINE) + ")")
             .call(d3.axisBottom(x));
 
         // format X axis
@@ -57,7 +58,7 @@ function makeLineChart() {
         // add Y axis
         var y = d3.scaleLinear()
             .domain([0, maxPrice])
-            .range([HEIGHT-MARGIN.BOTTOM, MARGIN.TOP])
+            .range([HEIGHT_LINE-MARGIN.BOTTOM, MARGIN.TOP])
         yAxis = svg.append("g")
             .attr("transform", "translate(0," + (MARGIN.BOTTOM) + ")")
             .call(d3.axisLeft(y));
@@ -69,32 +70,27 @@ function makeLineChart() {
 
         // Build X scales and axis for heatMap ########################################################
         var x_heatMap = d3.scaleBand()
-            .range([0, WIDTH - MARGIN.RIGHT])
+            .range([0, WIDTH_HEAT - MARGIN.RIGHT])
             .domain(myGroups)
             .padding(0.05);
         heatMap.append("g")
-            .style("font-size", 14)
-            .style("opacity", "0")
-            .attr("transform", "translate(0," + (HEIGHT - 200) + ")")
+            .style("font-size", 16)
+            .attr("class", "heatTick")
+            .style("opacity", 0)
+            .attr("transform", "translate(0," + (HEIGHT_HEAT - 200) + ")")
             .call(d3.axisBottom(x_heatMap).tickSize(0))
             .select(".domain").remove();
 
         // Build Y scales and axis:
         var y_heatMap = d3.scaleBand()
-            .range([HEIGHT - MARGIN.BOTTOM - MARGIN.TOP, 0 ])
+            .range([HEIGHT_HEAT - MARGIN.BOTTOM - MARGIN.TOP, 0 ])
             .domain(myVars)
             .padding(0.05);
 
-        vert = heatMap.append("g")
-            .style("font-size", 16)
-            .attr("class", "heatTick")
+        heatMap.append("g")
+            .style("font-size", 18)
             .call(d3.axisLeft(y_heatMap).tickSize(0))
             .select(".domain").remove()
-
-        vert.selectAll(".heatTick")
-            .text("yeet")
-            .attr("font-size","20")
-            .attr("fill","black")
 
         // Build color scale
         var myColor = d3.scaleSequential()
@@ -104,6 +100,7 @@ function makeLineChart() {
         // create a tooltip
         var tooltip_heatMap = d3.select("#HEAT_TOOLTIP")
             .append("div")
+            .text("t")
             .style("opacity", 0)
             .attr("class", "tooltip_heat")
             .style("background-color", "white")
@@ -170,14 +167,14 @@ function makeLineChart() {
         var clip = svg.append("defs").append("svg:clipPath")
             .attr("id", "clip")
             .append("svg:rect")
-            .attr("width", WIDTH-MARGIN.RIGHT )
-            .attr("height", HEIGHT )
+            .attr("width", WIDTH_LINE-MARGIN.RIGHT )
+            .attr("height", HEIGHT_LINE )
             .attr("x", 0)
             .attr("y", 0);
 
         // add brushing
         var brush = d3.brushX()                  
-            .extent( [ [0,200], [WIDTH, HEIGHT]])  
+            .extent( [ [0,200], [WIDTH_LINE, HEIGHT_LINE]])  
             .on("end", updateChart)             
 
         var line = svg.append('g')
@@ -191,9 +188,9 @@ function makeLineChart() {
 
         var groupData = d3.group(d, d => d.Ticker) // group data by ETF
         var tickers = groupHeader(d, "Ticker") // get unique ETF tickers
-        var color = d3.scaleOrdinal() // color scale
-            .domain(tickers)
-            .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#00008B','#a65628','#f781bf','#999999','#000000'])
+        // var color = d3.scaleOrdinal() // color scale
+        //     .domain(tickers)
+        //     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#00008B','#a65628','#f781bf','#999999','#000000'])
             // .range(["#58b5e1", "#cf4179", "#38e278", "#8b6fed", "#9f5827", "#154e56", "#f4cf92", "#ec102f", "#b1d34f", "#12982d"])
 
         // draw lines on the chart
@@ -207,7 +204,7 @@ function makeLineChart() {
                 return drawLine(d[1])
             })
             .attr("fill", "none")
-            .attr("stroke", d => color(d[0]))
+            .attr("stroke", d => colors[d[0]])
             .attr("stroke-width", 2)
             .attr("transform", "translate(0," + (MARGIN.BOTTOM) + ")")
 
@@ -222,15 +219,6 @@ function makeLineChart() {
             .attr("cy", function(d) { return y(d.Price)+100 })
             .attr("r", 1)
 
-        var tooltipLine = line.append('line')
-            .attr("class", "tooltip")
-            .attr('stroke', 'black')
-            .attr('stroke-width', '2')
-            .attr('x1', 300)
-            .attr('x2', 300)
-            .attr('y1', 0)
-            .attr('y2', HEIGHT);
-
         // add the brushing
         line.append("g")
             .attr("class", "brush")
@@ -241,11 +229,11 @@ function makeLineChart() {
             .data(tickers)
             .enter()
             .append("circle")
-            .attr("cx", function(d,i){ return 50 + i*160})
+            .attr("cx", function(d,i){ return 30 + i*140})
             .attr("cy", 150)
-            .attr("r", 15)
-            .style("fill", function(d){ return color(d)})
-            .style("stroke", function(d){ return color(d)})
+            .attr("r", 12)
+            .style("fill", function(d){ return colors[d]})
+            .style("stroke", function(d){ return colors[d]})
             .on("click", function(d, name) {
                 if (d3.select(this).classed('clicked')) {
                     d3.select(this).classed('clicked', false);
@@ -264,13 +252,13 @@ function makeLineChart() {
             .data(tickers)
             .enter()
             .append("text")
-            .attr("x", function(d,i){ return 70 + i*160})
-            .attr("y", 152)
-            .style("fill", function(d){ return color(d)})
+            .attr("x", function(d,i){ return 50 + i*140})
+            .attr("y", 150)
+            .style("fill", function(d){ return colors[d]})
             .text(function(d){ return d})
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
-            .style("font-size", "20")
+            .style("font-size", "18")
 
         // remove/add line to chart     
         function toggleLine(name, state) {

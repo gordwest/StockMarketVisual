@@ -10,45 +10,39 @@
         <script type = "text/javascript" src="charts/heatMap.js"></script>
     </head>
     <body>
-        <div id="main">
-            <div class="inner">
-                <header id="header">
-                    <p class="logo"><strong>CPSC 583 Project</strong></p>
+        <div class="container-fluid" style="padding-left: 120px; padding-right: 150px;">
+
+            <header id="header" style="padding: 100">
+                <p class="logo"><strong>CPSC 583 Project</strong></p>
+            </header>
+            <br>
+            <br>
+            <div class="content">
+                <header>
+                    <h1>Stock Market Visualization</h1>
                 </header>
-                <section id="banner">
-                    <div class="content">
-                        <header>
-                            <h1>Stock Market Visualization</h1>
-                        </header>
-                        <br>
-                        <h4>
-                            How did different sectors in the stock market react during the COVID-19 pandemic?
-                        </h4>
-                    </div>
-                </section>
-                    <ul class="actions">
-                        <li><a class="button" onclick="addAllLines()">Show All Sectors</a></li>
-                    </ul>
-                    <ul class="actions">
-                        <li><a class="button" onclick="removeAllLines()">Remove All Sectors</a></li>
-                    </ul>
+                <br>
+                <h3>
+                    How did different sectors in the stock market react during the COVID-19 pandemic?
+                </h3>
+                <p style="font-size: 18px">
+                    Our data set is from various ETF’s that represent the major sectors in the Canadian economy. The visualizations are for analyzing past trends in the Canadian market.
+                </p>
             </div>
         </div>
-        <div class="align-center" id="LINE_CHART"></div>
-        <div class="align-center" id="HEAT_TOOLTIP"> </div>
-        <div class="align-center" id="HEAT_MAP"></div>
-        <div class="align-center" id="TOOL_TIP"></div>
-        <!-- <div class="align-center" id="HEAT_MAP"></div> -->
-        <!-- <div class="container-fluid">
+        <br>
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-md">
+                <div class="col-md-8">
+                    <div class="align-center" id="LINE_CHART"></div>
                 </div>
-                <div class="col-md">
-                    <div id="LINE_LEGEND"></div>
+                <div class="col-md-4">
+                    <div class="align-center" id="HEAT_TOOLTIP"> </div>
+                    <div class="align-center" id="HEAT_MAP"></div>
+                    <div class="align-center" style="background: linear-gradient(to right, #ccffcc 0%, #006600 100%); height: 100; max-width: 300;"> <strong>Price: Low to High</strong></div>
                 </div>
             </div>
-        </div> -->
+        </div>
         <script>makeLineChart();</script>
-        <!-- <script>createHeatMap();</script> -->
     </body>
 </html>

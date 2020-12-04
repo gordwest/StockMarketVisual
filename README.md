@@ -2,6 +2,4 @@
 
 ## CPSC 583 project
 
-### Goals
-- Provide insight on Canadian stock ETF performance over the last 5 years.
-- 6 visuals
+### Interactive visuals to help understand how the stock market reacted in the last 5 years.
