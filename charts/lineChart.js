@@ -19,15 +19,10 @@ function makeLineChart() {
     d3.csv("data/FormattedData.csv")
         .then(function(d) { 
             keepData = [];
-            //for (i =0;i<data.length; i++)
             d.forEach(function(d){
-                //console.log(d);
-                // console.log(d.Date)
                 //if(d.Date == parseDate("12/31/2015") || d.Date == parseDate("12/29/2016") || d.Date === parseDate("12/29/2017")|| d.Date === parseDate("12/21/2018") || d.Date === parseDate("12/31/2019") || d.Date === parseDate("9/18/2020")) {
                 if(d.Date === "12/31/2015" || d.Date === "12/29/2016" || d.Date === "12/29/2017"|| d.Date === "12/21/2018" || d.Date === "12/31/2019" || d.Date === "9/18/2020"){
-
                     keepData.push(d)
-                    // d = d;
                 }
             })
 
@@ -35,10 +30,6 @@ function makeLineChart() {
             d.Date = parseDate(d.Date);
             d.Price = parseFloat(d.Price);
         });
-
-            console.log(keepData);
-            
-
 
         // line chart vars
         var minDate = d3.min(d, function(d) {return d.Date;});
@@ -86,17 +77,24 @@ function makeLineChart() {
             .style("opacity", "0")
             .attr("transform", "translate(0," + (HEIGHT - 200) + ")")
             .call(d3.axisBottom(x_heatMap).tickSize(0))
-            .select(".domain").remove()
+            .select(".domain").remove();
 
         // Build Y scales and axis:
         var y_heatMap = d3.scaleBand()
             .range([HEIGHT - MARGIN.BOTTOM - MARGIN.TOP, 0 ])
             .domain(myVars)
             .padding(0.05);
-        heatMap.append("g")
-            .style("font-size", 14)
+
+        vert = heatMap.append("g")
+            .style("font-size", 16)
+            .attr("class", "heatTick")
             .call(d3.axisLeft(y_heatMap).tickSize(0))
             .select(".domain").remove()
+
+        vert.selectAll(".heatTick")
+            .text("yeet")
+            .attr("font-size","20")
+            .attr("fill","black")
 
         // Build color scale
         var myColor = d3.scaleSequential()
@@ -114,28 +112,6 @@ function makeLineChart() {
             .style("border-radius", "5px")
             .style("padding", "5px")
 
-        // Three function that change the tooltip when user hovers
-        var mouseover = function(d) {
-            tooltip_heatMap
-                .style("opacity", 1)
-            d3.select(this)
-                .style("stroke", "black")
-                .style("opacity", 1)
-        }
-        var mousemove = function(d) {
-            tooltip_heatMap
-                .html("The price of " + d.Ticker + " on "  + d.Date + " was " + d.Price)
-                .style("left", (d3.mouse(this)[0]+70) + "px")
-                .style("top", (d3.mouse(this)[1]) + "px")
-        }
-        var mouseleave = function(d) {
-            tooltip_heatMap
-                .style("opacity", 0)
-            d3.select(this)
-                .style("stroke", "none")
-                .style("opacity", 0.8)
-        }
-
         // add the squares for the map
         heatMap.selectAll()
             .data(keepData, function(d) {return d.Date+':'+d.Ticker;})
@@ -152,8 +128,9 @@ function makeLineChart() {
             .style("stroke", "none")
             .style("opacity", 0.8)
             .on("mouseover", function(event,d){
+                mouseOver(d)
                 tooltip_heatMap
-                    .html("The price of " + d.Ticker + " on "  + d.Date + " was " + d.Price)
+                    .html("The price of " + d.Ticker + " on "  + d.Date.toString().slice(4,15) + " was $" + d.Price)
                     .style("opacity", 1)
                     .style("left", (event.screenX+70) + "px")
                     .style("top", (event.screenY) + "px")
@@ -162,12 +139,31 @@ function makeLineChart() {
                     .style("opacity", 1)
             })
             .on("mouseleave", function(event,d){
+                mouseLeave(d)
                 tooltip_heatMap
                     .style("opacity", 0)
                 d3.select(this)
                     .style("stroke", "none")
                     .style("opacity", 0.8)
             })
+
+            function mouseOver(data) {
+                line.selectAll(".circle")
+                .select(function(d){
+                    return d.Ticker === data.Ticker && d.Date == data.Date ? this :null; 
+                })
+                .style("r", "15")
+                .style("fill", "none")
+                .style("stroke", "red")
+                .style("stroke-width", "4");
+            }
+            function mouseLeave(data) {
+                line.selectAll(".circle")
+                .select(function(d){
+                    return d.Ticker === data.Ticker && d.Date == data.Date ? this :null; 
+                })
+                .style("stroke", "none");
+            }
 // #################################################################################################################
 
         // add a clipPath
@@ -187,27 +183,7 @@ function makeLineChart() {
         var line = svg.append('g')
             // .attr("transform", "translate(0," + (MARGIN.BOTTOM) + ")")
             .attr("clip-path", "url(#clip)")
-
-        const tooltip = d3.select('#TOOL_TIP');
-        const tooltipLine = line.append('line')
-                                .attr("class", "tooltip")
-                                .attr('stroke', 'black')
-                .attr('x1', 300)
-                .attr('x2', 300)
-                .attr('y1', 0)
-                .attr('y2', HEIGHT);
-
-        // tipBox = line.append('rect')
-        //     .attr('width', WIDTH)//-MARGIN.RIGHT)
-        //     .attr('height', HEIGHT)//-MARGIN.TOP-MARGIN.BOTTOM)
-        //     .attr('opacity', 0)
-        //     //.attr("transform", "translate(0," + 200 + ")")
-        //     .on('mousemove', function(d) {
-        //         console.log("mouse in ")
-        //     })
-        //     // drawTooltip)
-        //     .on('mouseout', removeTooltip);
-
+        
         // function to draw a line on the chart
         var drawLine = d3.line()
             .x(function(d) { return x(d.Date);})
@@ -221,8 +197,7 @@ function makeLineChart() {
             // .range(["#58b5e1", "#cf4179", "#38e278", "#8b6fed", "#9f5827", "#154e56", "#f4cf92", "#ec102f", "#b1d34f", "#12982d"])
 
         // draw lines on the chart
-        line
-            .selectAll('.line')
+        line.selectAll('.line')
             .data(groupData)
             .enter()
             .append("path")
@@ -236,17 +211,29 @@ function makeLineChart() {
             .attr("stroke-width", 2)
             .attr("transform", "translate(0," + (MARGIN.BOTTOM) + ")")
 
+        line.selectAll("myCircles")
+            .data(d)
+            .enter()
+            .append("circle")
+            .attr("class", "circle")
+            .attr("fill", "none")
+            // .attr("stroke", "none")
+            .attr("cx", function(d) { return x(d.Date) })
+            .attr("cy", function(d) { return y(d.Price)+100 })
+            .attr("r", 1)
+
+        var tooltipLine = line.append('line')
+            .attr("class", "tooltip")
+            .attr('stroke', 'black')
+            .attr('stroke-width', '2')
+            .attr('x1', 300)
+            .attr('x2', 300)
+            .attr('y1', 0)
+            .attr('y2', HEIGHT);
+
         // add the brushing
-        tipBox = line.append("g")
+        line.append("g")
             .attr("class", "brush")
-            .on('mousemove', function() {
-                console.log("mouse move")
-                drawTooltip
-            })
-            .on('mouseout',function() {
-                console.log("mouse out") 
-                removeTooltip
-            })
             .call(brush);
 
         // add a dot for each ETF
@@ -280,35 +267,10 @@ function makeLineChart() {
             .attr("x", function(d,i){ return 70 + i*160})
             .attr("y", 152)
             .style("fill", function(d){ return color(d)})
-            .text(function(d){ return sectors[d]})
+            .text(function(d){ return d})
             .attr("text-anchor", "left")
             .style("alignment-baseline", "middle")
             .style("font-size", "20")
-
-        function removeTooltip() {
-            if (tooltip) tooltip.style('display', 'none');
-            if (tooltipLine) tooltipLine.attr('stroke', 'none');
-            }
-            
-        function drawTooltip() { 
-                  
-            tooltipLine
-                .attr('stroke', 'black')
-                .attr('x1', 300)
-                .attr('x2', 300)
-                .attr('y1', 0)
-                .attr('y2', HEIGHT);
-            
-            tooltip.html()
-                .style('display', 'block')
-                .style('left', d3.event.pageX + 20)
-                .style('top', d3.event.pageY - 20)
-                .selectAll()
-                .data(states).enter()
-                .append('div')
-                .style('color', d => d.color)
-                .html(d => d.name + ': ' + d.history.find(h => h.year == year).population);
-        }
 
         // remove/add line to chart     
         function toggleLine(name, state) {
@@ -329,8 +291,6 @@ function makeLineChart() {
         // update the chart for given boundaries
         function updateChart(event) {
             extent = event.selection
-            // console.log(y.invert(extent[0]), y.invert(extent[1]))
-            // console.log(y.invert(extent[0]), y.invert(extent[1]))
             
             // if no selection, back to initial coordinate. Otherwise, update X axis domain
             if(!extent){
@@ -338,7 +298,6 @@ function makeLineChart() {
                 x.domain([ 4,8])
             }else{
                 x.domain([x.invert(extent[0]), x.invert(extent[1])])
-                // y.domain([0, y.invert(extent[1])])
                 line.select(".brush").call(brush.move, null) // This remove the grey brush area when selection is made
             }
 
@@ -347,13 +306,7 @@ function makeLineChart() {
                 .transition()
                 .duration(700)
                 .call(d3.axisBottom(x));
-            
-            // // update x axis 
-            // yAxis
-            //     .transition()
-            //     .duration(700)
-            //     .call(d3.axisLeft(y));
-
+    
             // update line position
             line
                 .selectAll('.line')
@@ -362,40 +315,34 @@ function makeLineChart() {
                 .attr('d', function(d) { 
                     return drawLine(d[1])
                 })
+
+            line.selectAll(".circle")
+                .transition()
+                .duration(700)
+                .attr("cx", function(d) { return x(d.Date) })
+                .attr("cy", function(d) { return y(d.Price)+100 })
         }
 
-        // function to clear line chart - activated by button
-        function removeAllLines() {
-            console.log("remove all");
-        }
-
-        // function to make all lines visible - activated by button
-        function addAllLines() {
-            console.log("add back");
-        }
-        
         // reinitialize chart on double click
         svg.on("dblclick",function(){
             x.domain([minDate, maxDate])
-            // y.domain([0, maxPrice])
             xAxis
                 .transition()
                 .call(d3.axisBottom(x));
             xAxis.selectAll(".tick text")
                 .attr("font-size","16")
                 .attr("fill","black");
-            // yAxis
-            //     .transition()
-            //     .call(d3.axisLeft(y));
-            // yAxis.selectAll(".tick text")
-            //     .attr("font-size","16")
-            //     .attr("fill","black");
             line
                 .selectAll('.line')
                 .transition()
                 .attr('d', function(d) { 
                     return drawLine(d[1])
                 })
+            line.selectAll(".circle")
+                .transition()
+                .attr("cx", function(d) { return x(d.Date) })
+                .attr("cy", function(d) { return y(d.Price)+100 })
+            
         });
     })
 }
