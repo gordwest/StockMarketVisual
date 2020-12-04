@@ -22,7 +22,7 @@ let colors = {
     "Financial": "#4daf4a",
     "Composite": "#999999",
     "Utilities": "#377eb8",
-    "Real Estate": "#a65628",
+    "RealEstate": "#a65628",
     "Technology": "#984ea3",
     "Energy": "#000000",
     "Gold": "#ff7f00" 
