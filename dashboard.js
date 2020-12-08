@@ -31,20 +31,14 @@ function makeLineChart() {
                     }
                 });
 
-        // keepData.forEach(function(keepData) {
-        //     keepData.Date = keepData.Date.toString().slice(4,15);
-        // });
-
-
-
         // line chart vars
         var minDate = d3.min(d, function(d) {return d.Date;});
         var maxDate = d3.max(d, function(d) {return d.Date;});
         var maxPrice = d3.max(d, function(d) {return d.Price;});
 
         // Labels of row and columns using the unique names: 'date' and 'ticker'
-        var myGroups = groupHeader(keepData, "Date")
-        var myVars = groupHeader(keepData, "Ticker")
+        var myDates = groupHeader(keepData, "Date")
+        var myTickers = groupHeader(keepData, "Ticker")
 
         // Add X axis
         var x = d3.scaleTime()
@@ -75,20 +69,24 @@ function makeLineChart() {
         // Build X scales and axis for heatMap ########################################################
         var x_heatMap = d3.scaleBand()
             .range([0, WIDTH_HEAT - MARGIN.RIGHT])
-            .domain(myGroups)
+            .domain(myDates)
             .padding(0.05);
-        heatMap.append("g")
+        heat_xAxis = heatMap.append("g")
             .style("font-size", 16)
-            .attr("class", "heatTick")
-            .style("opacity", 0)
-            .attr("transform", "translate(0," + (HEIGHT_HEAT - 200) + ")")
+            // .attr("class", "heatTick")
+            // .style("opacity", 1)
+            .attr("transform", "translate(0," + (HEIGHT_HEAT - 195) + ")")
             .call(d3.axisBottom(x_heatMap).tickSize(0))
-            .select(".domain").remove();
+            .call(g => g.select('.domain').remove());
 
-        // Build Y scales and axis:
+        heat_xAxis.selectAll(".tick text")
+            .text(d => d.toString().slice(4,7) + d.toString().slice(10,15))
+            .attr("font-size","16")
+
+            // Build Y scales and axis:
         var y_heatMap = d3.scaleBand()
             .range([HEIGHT_HEAT - MARGIN.BOTTOM - MARGIN.TOP, 0 ])
-            .domain(myVars)
+            .domain(myTickers)
             .padding(0.05);
 
         heatMap.append("g")
@@ -131,7 +129,7 @@ function makeLineChart() {
             .on("mouseover", function(event,d){
                 mouseOver(d)
                 tooltip_heatMap
-                    .html("The price of " + d.Ticker + " on "  + d.Date.toString().slice(4,15) + " was $" + d.Price)
+                    .html("The price of " + d.Ticker + " on "  + d.Date.toString().slice(4,10) + ", " +d.Date.toString().slice(11,15) + " was $" + d.Price)
                     .style("opacity", 1)
                     .style("left", (event.screenX+70) + "px")
                     .style("top", (event.screenY) + "px")
@@ -201,7 +199,6 @@ function makeLineChart() {
             .enter()
             .append("path")
             .attr("class", d => "line " + d[0]) 
-            // .attr("class", "line") 
             .attr('d', function(d) { 
                 return drawLine(d[1])
             })
