@@ -2,6 +2,7 @@ function makeLineChart() {
     // append the svg object to the body of the page
     var svg = d3.select("#LINE_CHART")
         .append("svg")
+        .attr("class", "lineChart")
         .attr("width", WIDTH_LINE + MARGIN.LEFT + MARGIN.RIGHT)
         .attr("height", HEIGHT_LINE + MARGIN.TOP + MARGIN.BOTTOM)
         .append("g")
@@ -9,6 +10,7 @@ function makeLineChart() {
 
     var heatMap = d3.select("#HEAT_MAP")
         .append("svg")
+        .attr("class", "heatMap")
         .attr("width", WIDTH_HEAT + MARGIN.LEFT + MARGIN.RIGHT)
         .attr("height", HEIGHT_HEAT)
         .append("g")
@@ -32,6 +34,8 @@ function makeLineChart() {
         // keepData.forEach(function(keepData) {
         //     keepData.Date = keepData.Date.toString().slice(4,15);
         // });
+
+
 
         // line chart vars
         var minDate = d3.min(d, function(d) {return d.Date;});
@@ -187,11 +191,9 @@ function makeLineChart() {
             .y(function(d) { return y(d.Price);});
 
         var groupData = d3.group(d, d => d.Ticker) // group data by ETF
-        var tickers = groupHeader(d, "Ticker") // get unique ETF tickers
-        // var color = d3.scaleOrdinal() // color scale
-        //     .domain(tickers)
-        //     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#00008B','#a65628','#f781bf','#999999','#000000'])
-            // .range(["#58b5e1", "#cf4179", "#38e278", "#8b6fed", "#9f5827", "#154e56", "#f4cf92", "#ec102f", "#b1d34f", "#12982d"])
+        var tickers = groupHeader(d, "Ticker").sort() // get unique ETF tickers
+        var tickers_firstRow = tickers.slice(0,5)
+        var tickers_secondRow = tickers.slice(5,10)
 
         // draw lines on the chart
         line.selectAll('.line')
@@ -214,7 +216,6 @@ function makeLineChart() {
             .append("circle")
             .attr("class", "circle")
             .attr("fill", "none")
-            // .attr("stroke", "none")
             .attr("cx", function(d) { return x(d.Date) })
             .attr("cy", function(d) { return y(d.Price)+100 })
             .attr("r", 1)
@@ -224,14 +225,36 @@ function makeLineChart() {
             .attr("class", "brush")
             .call(brush);
 
-        // add a dot for each ETF
+        // add first row of dots
         line.selectAll("mydots")
-            .data(tickers)
+            .data(tickers_firstRow)
             .enter()
             .append("circle")
-            .attr("cx", function(d,i){ return 30 + i*140})
-            .attr("cy", 150)
-            .attr("r", 12)
+            .attr("cx", function(d,i){return 180 + i*150})
+            .attr("cy", 140)
+            .attr("r", 15)
+            .style("fill", function(d){ return colors[d]})
+            .style("stroke", function(d){ return colors[d]})
+            .on("click", function(d, name) {
+                if (d3.select(this).classed('clicked')) {
+                    d3.select(this).classed('clicked', false);
+                    d3.select(this).style('fill-opacity', 1);
+                    toggleLine(name, false)
+                } 
+                else {
+                    d3.select(this).classed('clicked', true);
+                    d3.select(this).style('fill-opacity', 0);
+                    toggleLine(name, true)
+                }
+            });
+        // add second row of dots
+        line.selectAll("mydots")
+            .data(tickers_secondRow)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d,i){return 180 + i*150})
+            .attr("cy", 190)
+            .attr("r", 15)
             .style("fill", function(d){ return colors[d]})
             .style("stroke", function(d){ return colors[d]})
             .on("click", function(d, name) {
@@ -247,17 +270,29 @@ function makeLineChart() {
                 }
             });
 
-        // add the ETF category name for each dot
+        // add first row of ETF labels
         line.selectAll("mylabels")
-            .data(tickers)
+            .data(tickers_firstRow)
             .enter()
             .append("text")
-            .attr("x", function(d,i){ return 50 + i*140})
-            .attr("y", 150)
+            .attr("x", function(d,i){return 200 + i*150})
+            .attr("y", 145)
             .style("fill", function(d){ return colors[d]})
             .text(function(d){ return d})
             .attr("text-anchor", "left")
-            .style("alignment-baseline", "middle")
+            .style("alignment-baseline", "left")
+            .style("font-size", "18")
+        // add second row of ETF labels
+        line.selectAll("mylabels")
+            .data(tickers_secondRow)
+            .enter()
+            .append("text")
+            .attr("x", function(d,i){return 200 + i*150})
+            .attr("y", 195)
+            .style("fill", function(d){ return colors[d]})
+            .text(function(d){ return d})
+            .attr("text-anchor", "left")
+            .style("alignment-baseline", "left")
             .style("font-size", "18")
 
         // remove/add line to chart     

@@ -1,6 +1,10 @@
 //dimension of the  workspace
-const WIDTH_LINE  = 1920*0.8, HEIGHT_LINE = 1080*0.8;
-const WIDTH_HEAT  = 1920*0.35, HEIGHT_HEAT = 1080*0.7;
+
+var w = window.innerWidth;
+var h = window.innerHeight;
+
+const WIDTH_LINE  = 1920*0.6, HEIGHT_LINE = 1080*0.8;
+const WIDTH_HEAT  = 1920*0.3, HEIGHT_HEAT = 1080*0.7;
 
 const MARGIN = {
     "LEFT":100,
