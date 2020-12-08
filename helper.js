@@ -15,10 +15,6 @@ const MARGIN = {
 
 var parseDate = d3.timeParse("%m/%d/%Y");
 
-function print(text) {
-    console.log(text);
-}
-
 let colors = {
     "Consumer": "#00008B",
     "Healthcare": "#e41a1c",
